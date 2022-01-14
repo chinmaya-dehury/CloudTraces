@@ -15,7 +15,7 @@ Github Repo: AzurePublicDataset(https://github.com/Azure/AzurePublicDataset)
 * AzureTracesForPacking2020 - This dataset represents part of the workload on Microsoft's Azure Compute and is specifically intended to evaluate packing algorithms. 
 * AzureFunctionsDataset2019 - These traces contain, for a subset of applications running on Azure Functions in July of 2019: ... (https://github.com/Azure/AzurePublicDataset/blob/master/AzureFunctionsDataset2019.md)
 
- 
+  
 3. From Alibaba:
 
 - **FaaS cold start trace dataset collected from Alibaba**: FaaSNet is the first system that provides an end-to-end, integrated solution for FaaS-optimized container runtime provisioning. FaaSNet uses lightweight, decentralized, and adaptive Function Trees (FTs) to avoid major platform bottlenecks. Continue Reading -> https://github.com/mason-leap-lab/FaaSNet
