@@ -9,5 +9,4 @@ class StorageApiApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
