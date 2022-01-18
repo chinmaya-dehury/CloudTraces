@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.cloudTraceBucket"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -20,6 +20,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.postgresql:postgresql:42.3.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
