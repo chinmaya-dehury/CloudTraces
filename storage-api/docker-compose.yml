@@ -2,9 +2,16 @@ version: '3'
 services:
   postgresdb:
     image: "postgres:${POSTGRES_VERSION}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
     container_name: storage-api-db
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USERNAME}"
       POSTGRES_PASSWORD: "${POSTGRES_PWD}"
     ports:
       - "5432:5432"
