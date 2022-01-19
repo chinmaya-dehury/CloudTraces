@@ -3,8 +3,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.flywaydb.flyway") version "8.4.2"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
+}
+
+flyway {
+    val dbHost = System.getenv("DB_HOST")
+    val dbPort = System.getenv("DB_PORT")
+    val dbName = System.getenv("POSTGRES_DB")
+    val dbUser = System.getenv("POSTGRES_USERNAME")
+    val dbPwd = System.getenv("POSTGRES_PWD")
+
+    url = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
+    user = dbUser
+    password = dbPwd
 }
 
 group = "com.cloudTraceBucket"
@@ -17,7 +30,6 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.postgresql:postgresql:42.3.1")
