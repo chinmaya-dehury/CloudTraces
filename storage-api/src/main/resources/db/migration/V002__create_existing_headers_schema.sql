@@ -22,5 +22,11 @@ CREATE TABLE "existing_headers"
     delete_time         TIMESTAMP                   DEFAULT NULL
 );
 
+CREATE TRIGGER  existing_headers_trigger
+    BEFORE UPDATE
+    ON "existing_headers"
+    FOR EACH ROW
+EXECUTE PROCEDURE upd_timestamp();
+
 CREATE UNIQUE INDEX headers_uindex ON "existing_headers" (headers);
 CREATE UNIQUE INDEX dynamic_schema_name_uindex ON "existing_headers" (dynamic_schema_name);
