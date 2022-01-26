@@ -1,12 +1,12 @@
 CREATE TYPE trace_types AS ENUM (
-    'serverless_platform',
-    'cloud_storage',
-    'cloud_cluster',
-    'cloud_instances',
-    'machines',
-    'cloud_job',
-    'resources',
-    'collections'
+    'SERVERLESS_PLATFORM',
+    'CLOUD_STORAGE',
+    'CLOUD_CLUSTER',
+    'CLOUD_INSTANCES',
+    'MACHINES',
+    'CLOUD_JOB',
+    'RESOURCES',
+    'COLLECTIONS'
     );
 
 CREATE TABLE "existing_headers"
