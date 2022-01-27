@@ -1,3 +1,4 @@
+# TODO: The dockerfile is not working atm. Fix it
 FROM gradle:7.3.3-jdk17
 
 COPY --chown=gradle:gradle . /home/gradle/src
