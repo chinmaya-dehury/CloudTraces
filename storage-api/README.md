@@ -30,10 +30,10 @@ Build the project:
 Run tests:
 * `./gradlew test`
 
-# NB!
-Before running the project run DB migrations:
+## NB!
+After building and before running the project run DB migrations:
 * ` ./gradlew flywayMigrate -i`
 
-# And then...
+## And then...
 Run the project:
 * `./gradlew bootRun`
