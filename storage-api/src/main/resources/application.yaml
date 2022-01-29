@@ -1,0 +1,26 @@
+server:
+  port: 6001
+  error:
+    include-message: always
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: PostgreSQL92Dialect
+        show_sql: false
+        use_sql_comments: false
+        format_sql: false
+        naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        enable_lazy_load_no_trans: true
+        default_schema: ${POSTGRES_DB}
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+  datasource:
+    dbcp2:
+      test-while-idle: true
+      validation-query: 'SELECT 1'
+    driver-class-name: org.postgresql.Driver
+    url: 'jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}'
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PWD}
