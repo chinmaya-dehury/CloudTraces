@@ -37,6 +37,7 @@ dependencies {
     implementation("org.hibernate:hibernate-core:5.6.4.Final")
     implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("org.springframework.data:spring-data-jpa:2.6.1")
+    implementation("io.minio:minio:8.3.5")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
