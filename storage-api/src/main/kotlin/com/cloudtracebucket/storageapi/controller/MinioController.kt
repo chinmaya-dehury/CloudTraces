@@ -4,7 +4,6 @@ import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.jlefebure.spring.boot.minio.MinioException
 import com.jlefebure.spring.boot.minio.MinioService
-import io.minio.messages.Item
 import java.io.IOException
 import java.io.InputStream
 import java.net.URLConnection
