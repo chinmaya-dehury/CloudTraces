@@ -1,5 +1,7 @@
 package com.cloudtracebucket.storageapi.controller
 
+import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
+import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.jlefebure.spring.boot.minio.MinioException
 import com.jlefebure.spring.boot.minio.MinioService
 import io.minio.messages.Item
@@ -28,8 +30,8 @@ class MinioController @Autowired constructor(
 
     @GetMapping
     @Throws(MinioException::class)
-    fun getListOfFiles(): ResponseEntity<List<Item>> {
-        val files = minioService.list() ?: listOf()
+    fun getListOfFiles(): ResponseEntity<List<FileInfoResponse>> {
+        val files = FileFactory.createFileListResponse(minioService.list() ?: listOf())
 
         return ResponseEntity(files, HttpStatus.OK)
     }
