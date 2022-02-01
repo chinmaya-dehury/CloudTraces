@@ -41,8 +41,12 @@ dependencies {
     implementation("io.minio:minio:8.1.0")
     implementation("commons-io:commons-io:2.11.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.6.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.mockito:mockito-core:4.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.platform:junit-platform-runner:1.8.2")
 }
 
 tasks.withType<KotlinCompile> {
