@@ -60,10 +60,9 @@ class MinioControllerTest @Autowired constructor(
     fun getFileTest() {
         val testFilename = "test.csv"
         val path = "/files/$testFilename"
-        val result = mvc.perform(
-            get(path)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-        ).andExpect(status().`is`(200)).andReturn()
+        val result = mvc.perform(get(path)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM))
+            .andExpect(status().`is`(200)).andReturn()
 
         result.response.contentType = "multipart/form-data"
         result.response.addHeader("Content-disposition", "attachment;filename=$testFilename")
