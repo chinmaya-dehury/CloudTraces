@@ -1,7 +1,11 @@
 package com.cloudtracebucket.storageapi.controller
 
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
+import com.jlefebure.spring.boot.minio.MinioService
+import java.net.URLConnection
+import java.nio.file.Path
 import java.time.ZonedDateTime
+import javax.servlet.http.HttpServletResponse
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -19,6 +23,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.hamcrest.core.Is.`is`
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.mockito.Mock
+import org.mockito.Mockito.*
 
 
 @RunWith(SpringRunner::class)
@@ -46,5 +54,23 @@ class MinioControllerTest @Autowired constructor(
             .andExpect(status().isOk)
             .andExpect(jsonPath<List<Any>>("$", hasSize(1)))
             .andExpect(jsonPath<List<Any>>("$[0].fileName", `is`(files[0].fileName)))
+    }
+
+    @Test
+    fun getFileTest() {
+        val testFilename = "test.csv"
+        val path = "/files/$testFilename"
+        val result = mvc.perform(
+            get(path)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        ).andExpect(status().`is`(200)).andReturn()
+
+        result.response.contentType = "multipart/form-data"
+        result.response.addHeader("Content-disposition", "attachment;filename=$testFilename")
+
+        assertTrue(result.response.headerNames.contains("Content-disposition"))
+        assertEquals("multipart/form-data", result.response.contentType)
+        assertEquals("attachment;filename=$testFilename", result.response.getHeader("Content-disposition"))
+        assertEquals(200, result.response.status)
     }
 }

@@ -44,7 +44,7 @@ class MinioController @Autowired constructor(
         val inputStream: InputStream = minioService.get(Path.of(fileName))
 
         response.addHeader("Content-disposition", "attachment;filename=$fileName")
-        response.contentType = URLConnection.guessContentTypeFromName(fileName)
+        response.contentType = "multipart/form-data"
 
         IOUtils.copy(inputStream, response.outputStream)
         response.flushBuffer()
