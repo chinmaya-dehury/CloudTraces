@@ -17,3 +17,19 @@ services:
       - "5432:5432"
     networks:
       - default
+  minio:
+    image: minio/minio
+    container_name: minio-storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      timeout: 25s
+      interval: 7s
+      retries: 5
+    restart: always
+    environment:
+      MINIO_ROOT_USER: "${MINIO_USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_PASSWORD}"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server --console-address ":9001" /data

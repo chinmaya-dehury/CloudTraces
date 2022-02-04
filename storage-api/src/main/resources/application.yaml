@@ -24,3 +24,14 @@ spring:
     url: 'jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}'
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PWD}
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 150MB
+      max-request-size: 150MB
+  minio:
+    url : ${MINIO_URL}
+    bucket: cloud-trace-data-files
+    access-key: ${MINIO_USER}
+    secret-key: ${MINIO_PASSWORD}

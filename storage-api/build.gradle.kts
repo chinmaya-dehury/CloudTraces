@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.2"
+    id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.flywaydb.flyway") version "8.4.2"
     kotlin("jvm") version "1.6.10"
@@ -37,8 +37,16 @@ dependencies {
     implementation("org.hibernate:hibernate-core:5.6.4.Final")
     implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("org.springframework.data:spring-data-jpa:2.6.1")
+    implementation("com.jlefebure:spring-boot-starter-minio:1.10")
+    implementation("io.minio:minio:8.1.0")
+    implementation("commons-io:commons-io:2.11.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.6.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.mockito:mockito-core:4.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.platform:junit-platform-runner:1.8.2")
 }
 
 tasks.withType<KotlinCompile> {
