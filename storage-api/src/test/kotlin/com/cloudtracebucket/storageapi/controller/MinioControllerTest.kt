@@ -1,6 +1,7 @@
 package com.cloudtracebucket.storageapi.controller
 
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
+import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import java.time.ZonedDateTime
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
 import org.hamcrest.core.Is.`is`
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.notNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -75,6 +77,11 @@ class MinioControllerTest @Autowired constructor(
 
     @Test
     fun uploadFileTest() {
+
+        val fileUploadResponse = FileUploadResponse().also {
+            it.fileName = "testFile.csv"
+        }
+
         val mockMultipartFile = MockMultipartFile(
             "file",
             "testFile.csv",
@@ -82,9 +89,14 @@ class MinioControllerTest @Autowired constructor(
             "some rows".toByteArray()
         )
 
+        given(minioController.uploadFile(mockMultipartFile))
+            .willReturn(ResponseEntity(fileUploadResponse, HttpStatus.OK))
+
         val mvcResult = mockMvc
             .perform(multipart(path).file(mockMultipartFile).contentType(MediaType.MULTIPART_FORM_DATA))
             .andExpect(status().`is`(200))
+            .andExpect(jsonPath("fileName", `is`("testFile.csv")))
+            .andExpect(jsonPath<List<Any>>("$.errors", hasSize(0)))
             .andReturn()
 
         assertEquals(200, mvcResult.response.status)
