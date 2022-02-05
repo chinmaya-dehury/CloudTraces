@@ -102,4 +102,33 @@ class MinioControllerTest @Autowired constructor(
         assertEquals(200, mvcResult.response.status)
         assertNotNull(mvcResult.response.contentAsString)
     }
+
+    @Test
+    fun uploadFileTest_shouldReturn400() {
+        val fileUploadResponse = FileUploadResponse().also {
+            it.fileName = "testFile.pdf"
+            it.errors = listOf("Uploaded file is not a valid .csv file")
+        }
+
+        val mockMultipartFile = MockMultipartFile(
+            "file",
+            "testFile.pdf",
+            "multipart/form-data",
+            "some rows".toByteArray()
+        )
+
+        given(minioController.uploadFile(mockMultipartFile))
+            .willReturn(ResponseEntity(fileUploadResponse, HttpStatus.BAD_REQUEST))
+
+        val mvcResult = mockMvc
+            .perform(multipart(path).file(mockMultipartFile).contentType(MediaType.MULTIPART_FORM_DATA))
+            .andExpect(status().`is`(400))
+            .andExpect(jsonPath("fileName", `is`("testFile.pdf")))
+            .andExpect(jsonPath<List<Any>>("$.errors", hasSize(1)))
+            .andExpect(jsonPath<List<Any>>("$.errors[0]", `is`("Uploaded file is not a valid .csv file")))
+            .andReturn()
+
+        assertEquals(400, mvcResult.response.status)
+        assertNotNull(mvcResult.response.contentAsString)
+    }
 }
