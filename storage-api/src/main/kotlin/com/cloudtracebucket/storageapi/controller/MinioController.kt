@@ -1,7 +1,7 @@
 package com.cloudtracebucket.storageapi.controller
 
-import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
+import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.validator.FileValidator
 import com.jlefebure.spring.boot.minio.MinioException
@@ -14,13 +14,13 @@ import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/files")
@@ -55,15 +55,21 @@ class MinioController @Autowired constructor(
     @PostMapping
     @Throws(IllegalStateException::class)
     fun uploadFile(
-        @RequestParam("file") fileUploadRequest: FileUploadRequest,
-        bindingResult: BindingResult
-    ) {
-        fileValidator.validate(fileUploadRequest, bindingResult)
-        val file = fileUploadRequest.file
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<FileUploadResponse> {
+        val validationResults = fileValidator.validate(file)
+
+        if (validationResults.isNotEmpty()) {
+            val response = FileFactory.createFileUploadResponse(file, validationResults)
+            return ResponseEntity(response, HttpStatus.BAD_REQUEST)
+        }
 
         try {
             val pathOfFile = Path.of(file.originalFilename ?: file.name)
             minioService.upload(pathOfFile, file.inputStream, file.contentType)
+            val response = FileFactory.createFileUploadResponse(file)
+
+            return ResponseEntity(response, HttpStatus.OK)
         } catch (e: MinioException) {
             throw IllegalStateException("The file cannot be upload on the internal storage. Please retry later", e)
         } catch (e: IOException) {

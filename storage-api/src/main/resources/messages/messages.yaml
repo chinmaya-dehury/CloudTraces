@@ -1,9 +1,0 @@
-upload:
-  file:
-    required: File can not be empty
-  invalid:
-    file:
-      type: Please upload valid .csv file only
-  exceeded:
-    file:
-      size: Please upload a file with size less than 150 MB
