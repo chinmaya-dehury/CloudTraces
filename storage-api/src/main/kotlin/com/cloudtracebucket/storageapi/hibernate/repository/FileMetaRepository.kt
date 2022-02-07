@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FileMetaRepository : CrudRepository<FileMeta, Long>
+interface FileMetaRepository : CrudRepository<FileMeta, Long> {
+    fun existsByFileName(filename: String): Boolean
+}
