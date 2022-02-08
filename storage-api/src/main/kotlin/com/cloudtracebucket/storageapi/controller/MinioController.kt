@@ -1,5 +1,6 @@
 package com.cloudtracebucket.storageapi.controller
 
+import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
@@ -14,12 +15,7 @@ import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
@@ -55,9 +51,10 @@ class MinioController @Autowired constructor(
     @PostMapping
     @Throws(IllegalStateException::class)
     fun uploadFile(
-        @RequestParam("file") file: MultipartFile
+        @RequestPart("file") file: MultipartFile,
+        @RequestPart("file_details") fileDetails: FileUploadRequest
     ): ResponseEntity<FileUploadResponse> {
-        val validationResults = fileValidator.validate(file)
+        val validationResults = fileValidator.validateFileUploadRequest(file, fileDetails)
 
         if (validationResults.isNotEmpty()) {
             val response = FileFactory.createFileUploadResponse(file, validationResults)

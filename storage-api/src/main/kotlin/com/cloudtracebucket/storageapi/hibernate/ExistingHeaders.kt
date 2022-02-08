@@ -1,6 +1,6 @@
 package com.cloudtracebucket.storageapi.hibernate
 
-import com.cloudtracebucket.storageapi.hibernate.enums.TraceType
+import com.cloudtracebucket.storageapi.pojo.enums.TraceType
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import javax.persistence.Entity
