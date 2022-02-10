@@ -3,9 +3,11 @@ package com.cloudtracebucket.storageapi.factory
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import io.minio.messages.Item
+import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
-object FileFactory {
+@Component
+class FileFactory {
     fun createFileListResponse(files: List<Item>) = files.map { file ->
         FileInfoResponse().also {
             it.fileName = file.objectName()

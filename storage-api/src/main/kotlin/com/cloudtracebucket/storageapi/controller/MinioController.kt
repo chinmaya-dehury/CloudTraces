@@ -22,13 +22,14 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/files")
 class MinioController @Autowired constructor(
     private val minioService: MinioService,
-    private val fileValidator: FileValidator
+    private val fileValidator: FileValidator,
+    private val fileFactory: FileFactory
 ) {
 
     @GetMapping
     @Throws(MinioException::class)
     fun getListOfFiles(): ResponseEntity<List<FileInfoResponse>> {
-        val files = FileFactory.createFileListResponse(minioService.list() ?: listOf())
+        val files = fileFactory.createFileListResponse(minioService.list() ?: listOf())
 
         return ResponseEntity(files, HttpStatus.OK)
     }
@@ -57,14 +58,14 @@ class MinioController @Autowired constructor(
         val validationResults = fileValidator.validateFileUploadRequest(file, fileDetails)
 
         if (validationResults.isNotEmpty()) {
-            val response = FileFactory.createFileUploadResponse(file, validationResults)
+            val response = fileFactory.createFileUploadResponse(file, validationResults)
             return ResponseEntity(response, HttpStatus.BAD_REQUEST)
         }
 
         try {
             val pathOfFile = Path.of(file.originalFilename ?: file.name)
             minioService.upload(pathOfFile, file.inputStream, file.contentType)
-            val response = FileFactory.createFileUploadResponse(file)
+            val response = fileFactory.createFileUploadResponse(file)
 
             return ResponseEntity(response, HttpStatus.OK)
         } catch (e: MinioException) {
