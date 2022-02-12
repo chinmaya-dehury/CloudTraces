@@ -15,7 +15,12 @@ import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
@@ -53,7 +58,7 @@ class MinioController @Autowired constructor(
     @Throws(IllegalStateException::class)
     fun uploadFile(
         @RequestPart("file") file: MultipartFile,
-        @RequestPart("file_details") fileDetails: FileUploadRequest
+        fileDetails: FileUploadRequest
     ): ResponseEntity<FileUploadResponse> {
         val validationResults = fileValidator.validateFileUploadRequest(file, fileDetails)
 
@@ -67,7 +72,9 @@ class MinioController @Autowired constructor(
             minioService.upload(pathOfFile, file.inputStream, file.contentType)
             val response = fileFactory.createFileUploadResponse(file)
 
-            return ResponseEntity(response, HttpStatus.OK)
+            return ResponseEntity
+                .ok()
+                .body(response)
         } catch (e: MinioException) {
             throw IllegalStateException("The file cannot be upload on the internal storage. Please retry later", e)
         } catch (e: IOException) {
