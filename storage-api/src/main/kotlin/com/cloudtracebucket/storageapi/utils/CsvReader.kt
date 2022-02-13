@@ -1,17 +1,39 @@
 package com.cloudtracebucket.storageapi.utils
 
-import java.io.FileReader
+import com.cloudtracebucket.storageapi.pojo.enums.CsvStandardDelimiter
+import java.io.InputStreamReader
+import org.springframework.web.multipart.MultipartFile
 import org.supercsv.io.CsvBeanReader
 import org.supercsv.prefs.CsvPreference
 
-class CsvReader(
-    private val csvFileName: String,
-) {
+object CsvReader {
 
-    fun getCsvHeadersAsList() : List<String> {
-        val beanReader = CsvBeanReader(FileReader(csvFileName), CsvPreference.STANDARD_PREFERENCE)
+    fun getCsvHeadersAsList(file: MultipartFile, delimiter: CsvStandardDelimiter) : List<String> {
+        val delimiterSetting = getDelimiterSetting(delimiter)
+        val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSetting)
         val headers = beanReader.getHeader(true)
 
-        return headers.asList()
+        return headers
+            .asList()
+            .map { header -> formatHeader(header) }
+    }
+
+    private fun getDelimiterSetting(delimiter: CsvStandardDelimiter): CsvPreference {
+        return when (delimiter) {
+            CsvStandardDelimiter.COMMA_SEPARATED -> CsvPreference.STANDARD_PREFERENCE
+            CsvStandardDelimiter.SEMICOLON_SEPARATED -> CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE
+            CsvStandardDelimiter.TAB_SEPARATED -> CsvPreference.TAB_PREFERENCE
+            CsvStandardDelimiter.PIPE_SEPARATED -> CsvPreference
+                .Builder('"', '|'.code, "\n")
+                .build()
+            else -> CsvPreference.STANDARD_PREFERENCE
+        }
+    }
+
+    private fun formatHeader(header: String): String {
+        return header
+            .lowercase()
+            .trim()
+            .replace("\\s".toRegex(), "_")
     }
 }

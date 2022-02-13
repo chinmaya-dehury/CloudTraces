@@ -4,6 +4,7 @@ import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
+import com.cloudtracebucket.storageapi.service.FileService
 import com.cloudtracebucket.storageapi.validator.FileValidator
 import com.jlefebure.spring.boot.minio.MinioException
 import com.jlefebure.spring.boot.minio.MinioService
@@ -28,7 +29,8 @@ import org.springframework.web.multipart.MultipartFile
 class MinioController @Autowired constructor(
     private val minioService: MinioService,
     private val fileValidator: FileValidator,
-    private val fileFactory: FileFactory
+    private val fileFactory: FileFactory,
+    private val fileService: FileService
 ) {
 
     @GetMapping
@@ -68,13 +70,12 @@ class MinioController @Autowired constructor(
         }
 
         try {
+            fileService.processFile(file, fileDetails)
             val pathOfFile = Path.of(file.originalFilename ?: file.name)
             minioService.upload(pathOfFile, file.inputStream, file.contentType)
             val response = fileFactory.createFileUploadResponse(file)
 
-            return ResponseEntity
-                .ok()
-                .body(response)
+            return ResponseEntity(response, HttpStatus.OK)
         } catch (e: MinioException) {
             throw IllegalStateException("The file cannot be upload on the internal storage. Please retry later", e)
         } catch (e: IOException) {
