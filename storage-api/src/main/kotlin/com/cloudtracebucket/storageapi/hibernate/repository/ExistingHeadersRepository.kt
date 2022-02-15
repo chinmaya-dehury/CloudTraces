@@ -13,9 +13,9 @@ interface ExistingHeadersRepository : CrudRepository<ExistingHeaders, Long> {
         nativeQuery = true,
         value = """
         SELECT * FROM existing_headers e WHERE
-        delete_time IS NOT NULL 
-        AND (SELECT array_sort(:file_headers) = array_sort(e.headers))
+        array_sort(string_to_array(:file_headers, ',')) = array_sort(e.headers)
+        AND delete_time IS NOT NULL 
         """
     )
-    fun findByHeaders(@Param("file_headers") fileHeaders: List<String>): ExistingHeaders?
+    fun findByHeaders(@Param("file_headers") fileHeaders: String): ExistingHeaders?
 }

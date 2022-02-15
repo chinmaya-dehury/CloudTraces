@@ -24,7 +24,6 @@ class FileMeta {
     var provider: String? = null
 
     @OneToOne(targetEntity = ExistingHeaders::class, fetch = FetchType.EAGER)
-    @Column(nullable = false, name = "headers_schema_id")
     var existingHeader: ExistingHeaders? = null
 
     @Column(name = "upload_time", insertable = false, updatable = false)

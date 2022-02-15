@@ -6,7 +6,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: PostgreSQL92Dialect
+        dialect: org.hibernate.dialect.PostgreSQL92Dialect
         show_sql: false
         use_sql_comments: false
         format_sql: false
