@@ -1,4 +1,4 @@
-package com.cloudtracebucket.storageapi.hibernate.enums
+package com.cloudtracebucket.storageapi.pojo.enums
 
 enum class TraceType {
     SERVERLESS_PLATFORM,
