@@ -20,4 +20,8 @@ class FileFactory {
         it.fileName = file.originalFilename ?: file.name
         it.errors = errors
     }
+
+//    fun createFileMeta(file: MultipartFile, fileDetails: FileUploadRequest): FileMeta {
+//
+//    }
 }

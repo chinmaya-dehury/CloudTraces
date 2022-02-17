@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface FileMetaRepository : CrudRepository<FileMeta, Long> {
     @Query(nativeQuery = true, value = """
-        SELECT * FROM file_meta 
+        SELECT * FROM file_meta
         WHERE file_name = :file_name
         AND delete_time IS NULL
         LIMIT 1;

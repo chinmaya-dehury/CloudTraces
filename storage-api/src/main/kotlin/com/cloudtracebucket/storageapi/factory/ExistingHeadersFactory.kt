@@ -14,8 +14,8 @@ class ExistingHeadersFactory {
     ): ExistingHeaders {
         return ExistingHeaders().also {
             it.provider = fileDetails.provider
-            it.headers = fileHeaders.split(",")
             it.traceType = fileDetails.traceType
+            it.headersListAsString = fileHeaders
         }
     }
 }

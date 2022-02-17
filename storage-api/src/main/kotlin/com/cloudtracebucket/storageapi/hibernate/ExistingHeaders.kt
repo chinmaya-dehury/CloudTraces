@@ -2,7 +2,6 @@ package com.cloudtracebucket.storageapi.hibernate
 
 import com.cloudtracebucket.storageapi.pojo.enums.TraceType
 import com.cloudtracebucket.storageapi.utils.PostgreSQLEnumUtil
-import com.vladmihalcea.hibernate.type.array.ListArrayType
 import org.hibernate.annotations.Where
 import java.time.LocalDateTime
 import javax.persistence.Entity
@@ -16,7 +15,6 @@ import org.hibernate.annotations.TypeDef
 @Entity(name = "existing_headers")
 @Where(clause = "delete_time IS NULL")
 @TypeDef(name = "trace_types", typeClass = PostgreSQLEnumUtil::class)
-@TypeDef(name = "list-array", typeClass = ListArrayType::class)
 class ExistingHeaders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +23,18 @@ class ExistingHeaders {
     @Column(name = "provider")
     var provider: String? = null
 
-    @Type(type = "list-array")
-    @Column(name = "headers", columnDefinition = "text[]")
-    var headers: List<String>? = listOf()
+    @Column(name = "file_headers")
+    var headersListAsString: String? = null
 
     @Column(name = "dynamic_schema_name")
     var dynamicSchemaName: String? = null
 
-    @Column(name = "trace_types")
+    @Column(name = "trace_type")
     @Type(type = "trace_types")
     var traceType: TraceType? = null
+
+    @Column(name = "target_schema")
+    var targetSchema: String? = null
 
     @Column(name = "create_time", insertable = false, updatable = false)
     var createTime: LocalDateTime? = null

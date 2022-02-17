@@ -7,12 +7,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL92Dialect
-        show_sql: false
+        show_sql: true
         use_sql_comments: false
         format_sql: false
         naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
         enable_lazy_load_no_trans: true
-        default_schema: ${POSTGRES_DB}
+        default_schema: ${POSTGRES_DEFAULT_SCHEMA}
     hibernate:
       ddl-auto: none
     open-in-view: true

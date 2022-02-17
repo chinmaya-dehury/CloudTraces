@@ -8,14 +8,14 @@ import org.supercsv.prefs.CsvPreference
 
 object CsvReader {
 
-    fun getCsvHeadersAsList(file: MultipartFile, delimiter: CsvStandardDelimiter) : String {
+    fun getCsvHeaders(file: MultipartFile, delimiter: CsvStandardDelimiter): String {
         val delimiterSetting = getDelimiterSetting(delimiter)
         val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSetting)
-        val headers = beanReader.getHeader(true)
 
-        return headers
-            .asList()
-            .joinToString(",") { header -> formatHeader(header) }
+        return beanReader.getHeader(true)
+            .map { formatHeader(it) }
+            .sorted()
+            .joinToString(",")
     }
 
     private fun getDelimiterSetting(delimiter: CsvStandardDelimiter): CsvPreference {
@@ -34,6 +34,7 @@ object CsvReader {
         return header
             .lowercase()
             .trim()
+            .replace("\\[|\\]".toRegex(), "")
             .replace("\\s".toRegex(), "_")
     }
 }

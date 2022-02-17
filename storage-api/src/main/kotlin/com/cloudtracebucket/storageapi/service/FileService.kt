@@ -22,7 +22,7 @@ class FileService @Autowired constructor(
             throw FileServiceException("File ${file.originalFilename} already exists")
         }
 
-        val fileHeaders = CsvReader.getCsvHeadersAsList(file, fileDetails.delimiter!!)
+        val fileHeaders = CsvReader.getCsvHeaders(file, fileDetails.delimiter!!)
         val existingHeaders = getExistingHeaders(fileHeaders)
 
         if (existingHeaders == null) {
@@ -34,6 +34,6 @@ class FileService @Autowired constructor(
     private fun fileExists(filename: String) = fileMetaRepository.findFirstByFileName(filename) != null
 
     private fun getExistingHeaders(headers: String): ExistingHeaders? {
-        return headersRepository.findByHeaders(headers)
+        return headersRepository.findFirstByHeaders(headers)
     }
 }
