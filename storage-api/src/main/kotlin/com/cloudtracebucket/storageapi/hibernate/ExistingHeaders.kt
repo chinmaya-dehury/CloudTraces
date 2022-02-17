@@ -9,6 +9,8 @@ import javax.persistence.Id
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Column
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 
@@ -31,6 +33,7 @@ class ExistingHeaders {
 
     @Column(name = "trace_type")
     @Type(type = "trace_types")
+    @Enumerated(EnumType.STRING)
     var traceType: TraceType? = null
 
     @Column(name = "target_schema")

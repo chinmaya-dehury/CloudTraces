@@ -45,6 +45,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
     implementation("net.sf.supercsv:super-csv:2.4.0")
     implementation("net.sf.oval:oval:3.2.1")
+    implementation("commons-io:commons-io:2.11.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito:mockito-core:4.3.1")

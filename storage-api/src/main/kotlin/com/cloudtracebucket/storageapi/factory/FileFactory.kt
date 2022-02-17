@@ -1,8 +1,12 @@
 package com.cloudtracebucket.storageapi.factory
 
+import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
+import com.cloudtracebucket.storageapi.hibernate.ExistingHeaders
+import com.cloudtracebucket.storageapi.hibernate.FileMeta
 import io.minio.messages.Item
+import org.apache.commons.io.FilenameUtils.getExtension
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
@@ -16,12 +20,23 @@ class FileFactory {
         }
     }
 
-    fun createFileUploadResponse(file: MultipartFile, errors: List<String> = listOf()) = FileUploadResponse().also {
+    fun createFileUploadResponse(
+        file: MultipartFile,
+        errors: List<String> = listOf(),
+    ) = FileUploadResponse().also {
         it.fileName = file.originalFilename ?: file.name
         it.errors = errors
     }
 
-//    fun createFileMeta(file: MultipartFile, fileDetails: FileUploadRequest): FileMeta {
-//
-//    }
+    fun createFileMetaEntity(
+        file: MultipartFile,
+        fileDetails: FileUploadRequest,
+        existingHeader: ExistingHeaders,
+    ) = FileMeta().also {
+        it.fileName = file.originalFilename ?: file.name
+        it.fileSize = file.size
+        it.fileFormat = getExtension(file.originalFilename)
+        it.provider = fileDetails.provider
+        it.existingHeader = existingHeader
+    }
 }

@@ -3,6 +3,7 @@ package com.cloudtracebucket.storageapi.service
 import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.exception.FileServiceException
 import com.cloudtracebucket.storageapi.factory.ExistingHeadersFactory
+import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.hibernate.ExistingHeaders
 import com.cloudtracebucket.storageapi.hibernate.repository.ExistingHeadersRepository
 import com.cloudtracebucket.storageapi.hibernate.repository.FileMetaRepository
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile
 class FileService @Autowired constructor(
     private val fileMetaRepository: FileMetaRepository,
     private val headersRepository: ExistingHeadersRepository,
-    private val existingHeadersFactory: ExistingHeadersFactory
+    private val existingHeadersFactory: ExistingHeadersFactory,
+    private val fileFactory: FileFactory
 ) {
     fun processFile(file: MultipartFile, fileDetails: FileUploadRequest) {
         if (fileExists(file.originalFilename ?: file.name)) {
@@ -23,12 +25,15 @@ class FileService @Autowired constructor(
         }
 
         val fileHeaders = CsvReader.getCsvHeaders(file, fileDetails.delimiter!!)
-        val existingHeaders = getExistingHeaders(fileHeaders)
+        var existingHeaders = getExistingHeaders(fileHeaders)
 
         if (existingHeaders == null) {
-            val newExistingHeaders = existingHeadersFactory.createHeadersData(file, fileDetails, fileHeaders)
-            headersRepository.save(newExistingHeaders)
+            existingHeaders = existingHeadersFactory.createHeadersEntity(file, fileDetails, fileHeaders)
+            headersRepository.save(existingHeaders)
         }
+
+        val fileMeta = fileFactory.createFileMetaEntity(file, fileDetails, existingHeaders)
+        fileMetaRepository.save(fileMeta)
     }
 
     private fun fileExists(filename: String) = fileMetaRepository.findFirstByFileName(filename) != null

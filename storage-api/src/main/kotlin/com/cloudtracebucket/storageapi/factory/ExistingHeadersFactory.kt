@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class ExistingHeadersFactory {
-    fun createHeadersData(
+    fun createHeadersEntity(
         file: MultipartFile,
         fileDetails: FileUploadRequest,
         fileHeaders: String
