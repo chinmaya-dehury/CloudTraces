@@ -7,7 +7,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL92Dialect
-        show_sql: true
+        show_sql: false
         use_sql_comments: false
         format_sql: false
         naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
