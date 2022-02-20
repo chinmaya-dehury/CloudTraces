@@ -1,36 +1,40 @@
 package com.cloudtracebucket.storageapi.utils
 
+import com.cloudtracebucket.storageapi.exception.UtilException
 import com.cloudtracebucket.storageapi.pojo.enums.CsvStandardDelimiter
 import com.cloudtracebucket.storageapi.utils.FileUtil.CSV_MIME_TYPE
-import java.io.FileWriter
+import java.io.IOException
 import java.io.InputStreamReader
+import java.nio.charset.Charset
+import org.apache.commons.io.FileUtils
 import org.springframework.web.multipart.MultipartFile
 import org.supercsv.io.CsvBeanReader
-import org.supercsv.io.CsvBeanWriter
 import org.supercsv.prefs.CsvPreference
-
 
 object CsvUtil {
 
-    fun getCsvHeaders(file: MultipartFile, delimiter: CsvStandardDelimiter): List<String> {
-        val delimiterSetting = getDelimiterSetting(delimiter)
-        val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSetting)
+    fun getCsvHeaders(file: MultipartFile, delimiter: CsvStandardDelimiter): String {
+        val delimiterSettings = getDelimiterSetting(delimiter)
+        val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSettings.first)
         val headers = beanReader.getHeader(true)
             .map { formatHeader(it) }
-            .sorted()
-        println(headers)
-        return headers
+
+        return listToString(headers, delimiterSettings)
     }
 
-    private fun getDelimiterSetting(delimiter: CsvStandardDelimiter): CsvPreference {
+    private fun getDelimiterSetting(delimiter: CsvStandardDelimiter): Pair<CsvPreference, String> {
         return when (delimiter) {
-            CsvStandardDelimiter.COMMA_SEPARATED -> CsvPreference.STANDARD_PREFERENCE
-            CsvStandardDelimiter.SEMICOLON_SEPARATED -> CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE
-            CsvStandardDelimiter.TAB_SEPARATED -> CsvPreference.TAB_PREFERENCE
-            CsvStandardDelimiter.PIPE_SEPARATED -> CsvPreference
-                .Builder('"', '|'.code, "\n")
-                .build()
-            else -> CsvPreference.STANDARD_PREFERENCE
+            CsvStandardDelimiter.COMMA_SEPARATED -> Pair(CsvPreference.STANDARD_PREFERENCE, ",")
+            CsvStandardDelimiter.SEMICOLON_SEPARATED -> Pair(CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE, ";")
+            CsvStandardDelimiter.TAB_SEPARATED -> Pair(CsvPreference.TAB_PREFERENCE, "\t")
+            CsvStandardDelimiter.SPACE_SEPARATED -> Pair(
+                CsvPreference.Builder('"', ' '.code, "\n").build(),
+                "\\s"
+            )
+            CsvStandardDelimiter.PIPE_SEPARATED -> Pair(
+                CsvPreference.Builder('"', '|'.code, "\n").build(),
+                "|"
+            )
         }
     }
 
@@ -42,20 +46,24 @@ object CsvUtil {
             .replace("\\s".toRegex(), "_")
     }
 
-    fun overrideCsvHeaders(
-        formattedHeaders: List<String>,
-        multipartFile: MultipartFile,
-        delimiter: CsvStandardDelimiter,
-    ): MultipartFile {
-        val delimiterSetting = getDelimiterSetting(delimiter)
+    fun replaceHeadersInFile(multipartFile: MultipartFile, headersAsString: String): MultipartFile {
         val file = FileUtil.multipartFileToFile(multipartFile)
-        val fileWriter = FileWriter(file)
-        val csvBeanWriter = CsvBeanWriter(fileWriter, delimiterSetting)
 
-        // list to varargs
-        csvBeanWriter.writeHeader(*formattedHeaders.toTypedArray())
-        csvBeanWriter.close()
+        try {
+            val lines = FileUtils.readLines(file, Charset.defaultCharset())
+            lines[0] = headersAsString
+            FileUtils.writeLines(file, lines, false)
+        } catch (e: IOException) {
+            throw UtilException("Failed to re-write headers in file ${file.name}", e)
+        }
 
         return FileUtil.fileToMultipartFile(file, CSV_MIME_TYPE)
+    }
+
+    private fun listToString(
+        list: List<Any>,
+        delimiterSettings: Pair<CsvPreference, String>,
+    ): String {
+        return list.joinToString(delimiterSettings.second)
     }
 }

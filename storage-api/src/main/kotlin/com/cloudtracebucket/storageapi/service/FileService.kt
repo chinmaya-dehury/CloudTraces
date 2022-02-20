@@ -30,11 +30,10 @@ class FileService @Autowired constructor(
             throw FileServiceException("File ${file.originalFilename} does not contain headers on the first row")
         }
 
-        val stringifiedHeadersList = listToString(fileHeaders)
-        var existingHeaders = getExistingHeaders(stringifiedHeadersList)
+        var existingHeaders = getExistingHeaders(fileHeaders)
 
         if (existingHeaders == null) {
-            existingHeaders = existingHeadersFactory.createHeadersEntity(file, fileDetails, stringifiedHeadersList)
+            existingHeaders = existingHeadersFactory.createHeadersEntity(file, fileDetails, fileHeaders)
             headersRepository.save(existingHeaders)
         }
 
@@ -47,6 +46,4 @@ class FileService @Autowired constructor(
     private fun getExistingHeaders(headers: String): ExistingHeaders? {
         return headersRepository.findFirstByHeaders(headers)
     }
-
-    private fun listToString(list: List<Any>) = list.joinToString(",")
 }

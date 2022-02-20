@@ -10,7 +10,7 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 
 object FileUtil {
-    val CSV_MIME_TYPE = "text/csv"
+    const val CSV_MIME_TYPE = "text/csv"
 
     @Throws(IOException::class)
     fun multipartFileToFile(multipartFile: MultipartFile): File {
