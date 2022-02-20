@@ -7,7 +7,7 @@ import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.hibernate.ExistingHeaders
 import com.cloudtracebucket.storageapi.hibernate.repository.ExistingHeadersRepository
 import com.cloudtracebucket.storageapi.hibernate.repository.FileMetaRepository
-import com.cloudtracebucket.storageapi.utils.CsvReader
+import com.cloudtracebucket.storageapi.utils.CsvUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -24,11 +24,17 @@ class FileService @Autowired constructor(
             throw FileServiceException("File ${file.originalFilename} already exists")
         }
 
-        val fileHeaders = CsvReader.getCsvHeaders(file, fileDetails.delimiter!!)
-        var existingHeaders = getExistingHeaders(fileHeaders)
+        val fileHeaders = CsvUtil.getCsvHeaders(file, fileDetails.delimiter!!)
+
+        if (fileHeaders.isEmpty()) {
+            throw FileServiceException("File ${file.originalFilename} does not contain headers on the first row")
+        }
+
+        val stringifiedHeadersList = listToString(fileHeaders)
+        var existingHeaders = getExistingHeaders(stringifiedHeadersList)
 
         if (existingHeaders == null) {
-            existingHeaders = existingHeadersFactory.createHeadersEntity(file, fileDetails, fileHeaders)
+            existingHeaders = existingHeadersFactory.createHeadersEntity(file, fileDetails, stringifiedHeadersList)
             headersRepository.save(existingHeaders)
         }
 
@@ -41,4 +47,6 @@ class FileService @Autowired constructor(
     private fun getExistingHeaders(headers: String): ExistingHeaders? {
         return headersRepository.findFirstByHeaders(headers)
     }
+
+    private fun listToString(list: List<Any>) = list.joinToString(",")
 }

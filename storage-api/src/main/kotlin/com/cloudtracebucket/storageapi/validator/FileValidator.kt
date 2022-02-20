@@ -1,6 +1,7 @@
 package com.cloudtracebucket.storageapi.validator
 
 import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
+import com.cloudtracebucket.storageapi.utils.FileUtil.CSV_MIME_TYPE
 import net.sf.oval.Validator
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -9,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile
 class FileValidator {
 
     private val ovalValidator: Validator = Validator()
-    private val CSV_MIME_TYPE = "text/csv"
     private val FILE_LIMIT_SIZE = 157286400
 
     fun validateFileUploadRequest(
