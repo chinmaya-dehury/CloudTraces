@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION load_csv_file(
     csv_file_url TEXT,
     delimiter TEXT,
     col_count INTEGER)
-    RETURNS void AS
+    RETURNS BOOLEAN AS
 $BODY$
 
 DECLARE
@@ -49,6 +49,7 @@ BEGIN
         EXECUTE format('ALTER TABLE temp_table RENAME TO %I', target_table);
     END IF;
 
+    RETURN TRUE;
 END;
 
 $BODY$
