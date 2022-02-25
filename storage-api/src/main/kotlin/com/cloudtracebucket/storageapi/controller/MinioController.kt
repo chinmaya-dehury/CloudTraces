@@ -70,10 +70,9 @@ class MinioController @Autowired constructor(
         }
 
         try {
-            fileService.processFile(file, fileDetails)
-
             val pathOfFile = Path.of(file.originalFilename ?: file.name)
             minioService.upload(pathOfFile, file.inputStream, file.contentType)
+            fileService.processFile(file, fileDetails)
             val response = fileFactory.createFileUploadResponse(file)
 
             return ResponseEntity(response, HttpStatus.OK)

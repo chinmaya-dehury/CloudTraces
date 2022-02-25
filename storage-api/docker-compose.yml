@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgresdb:
-    image: "postgres:${POSTGRES_VERSION}"
+    build: .
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U"]
       timeout: 45s

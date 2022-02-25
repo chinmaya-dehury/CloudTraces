@@ -1,7 +1,8 @@
 -- https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers
 CREATE OR REPLACE FUNCTION load_csv_file(
     target_table TEXT,
-    csv_path TEXT,
+    csv_file_url TEXT,
+    delimiter TEXT,
     col_count INTEGER)
     RETURNS void AS
 $BODY$
@@ -11,6 +12,7 @@ DECLARE
     iter      INTEGER; -- dummy integer to iterate columns with
     col       TEXT; -- variable to keep the column name at each iteration
     col_first TEXT; -- first column name, e.g., top left corner on a csv file or spreadsheet
+    curl_url  TEXT;
 
 BEGIN
     SET SCHEMA 'public';
@@ -24,7 +26,8 @@ BEGIN
         END LOOP;
 
     -- copy the data from csv file
-    EXECUTE format('COPY temp_table FROM %L WITH DELIMITER '','' QUOTE ''"'' csv ', csv_path);
+    curl_url := format('curl "%s"', csv_file_url);
+    EXECUTE format('COPY temp_table FROM PROGRAM %L WITH DELIMITER ''%s'' QUOTE ''"'' CSV ', curl_url, delimiter);
 
     iter := 1;
     col_first := (SELECT col_1 FROM temp_table LIMIT 1);
@@ -51,5 +54,5 @@ END;
 $BODY$
     LANGUAGE plpgsql VOLATILE
                      COST 100;
-ALTER FUNCTION load_csv_file(text, text, integer)
+ALTER FUNCTION load_csv_file(text, text, text, integer)
     OWNER TO admin;

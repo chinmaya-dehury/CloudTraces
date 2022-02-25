@@ -13,16 +13,15 @@ import org.supercsv.prefs.CsvPreference
 
 object CsvUtil {
 
-    fun getCsvHeaders(file: MultipartFile, delimiter: CsvStandardDelimiter): String {
+    fun getCsvHeaders(file: MultipartFile, delimiter: CsvStandardDelimiter): List<String> {
         val delimiterSettings = getDelimiterSetting(delimiter)
         val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSettings.first)
-        val headers = beanReader.getHeader(true)
-            .map { formatHeader(it) }
 
-        return listToString(headers, delimiterSettings)
+        return beanReader.getHeader(true)
+            .map { formatHeader(it) }
     }
 
-    private fun getDelimiterSetting(delimiter: CsvStandardDelimiter): Pair<CsvPreference, String> {
+    fun getDelimiterSetting(delimiter: CsvStandardDelimiter): Pair<CsvPreference, String> {
         return when (delimiter) {
             CsvStandardDelimiter.COMMA_SEPARATED -> Pair(CsvPreference.STANDARD_PREFERENCE, ",")
             CsvStandardDelimiter.SEMICOLON_SEPARATED -> Pair(CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE, ";")
@@ -60,10 +59,11 @@ object CsvUtil {
         return FileUtil.fileToMultipartFile(file, CSV_MIME_TYPE)
     }
 
-    private fun listToString(
+    fun listToString(
         list: List<Any>,
-        delimiterSettings: Pair<CsvPreference, String>,
+        delimiter: CsvStandardDelimiter? = CsvStandardDelimiter.COMMA_SEPARATED,
     ): String {
+        val delimiterSettings = getDelimiterSetting(delimiter!!)
         return list.joinToString(delimiterSettings.second)
     }
 }
