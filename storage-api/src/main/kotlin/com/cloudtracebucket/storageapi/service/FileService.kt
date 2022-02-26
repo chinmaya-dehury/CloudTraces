@@ -1,5 +1,7 @@
 package com.cloudtracebucket.storageapi.service
 
+import Environment.MINIO_BUCKET_NAME
+import Environment.MINIO_INTERNAL_HOST
 import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.exception.FileServiceException
 import com.cloudtracebucket.storageapi.exception.UtilException
@@ -75,7 +77,7 @@ class FileService @Autowired constructor(
     }
 
     private fun getMinioObjectUrl(filename: String): String {
-        return "http://minio:9000/cloud-trace-data-files/$filename"
+        return "$MINIO_INTERNAL_HOST/$MINIO_BUCKET_NAME/$filename"
     }
 
     private fun generateTargetTableName(multipartFile: MultipartFile, provider: String): String {
