@@ -40,9 +40,9 @@ object CsvUtil {
     private fun formatHeader(header: String): String {
         return header
             .lowercase()
+            .replace("[^a-zA-Z0-9]".toRegex(), " ")
             .trim()
-            .replace("\\[|\\]".toRegex(), "")
-            .replace("\\s".toRegex(), "_")
+            .replace("\\s+".toRegex(), "_")
     }
 
     fun replaceHeadersInFile(multipartFile: MultipartFile, headersAsString: String): MultipartFile {
