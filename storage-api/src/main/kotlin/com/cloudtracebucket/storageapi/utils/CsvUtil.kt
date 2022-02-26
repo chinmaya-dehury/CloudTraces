@@ -18,7 +18,9 @@ object CsvUtil {
         val beanReader = CsvBeanReader(InputStreamReader(file.inputStream), delimiterSettings.first)
 
         return beanReader.getHeader(true)
-            .map { formatHeader(it) }
+            .mapIndexed { idx, header ->
+                formatHeader(header ?: "col_$idx")
+            }
     }
 
     fun getDelimiterSetting(delimiter: CsvStandardDelimiter): Pair<CsvPreference, String> {

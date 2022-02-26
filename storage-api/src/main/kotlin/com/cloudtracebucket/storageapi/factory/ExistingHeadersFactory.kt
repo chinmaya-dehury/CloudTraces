@@ -8,12 +8,14 @@ import org.springframework.stereotype.Component
 class ExistingHeadersFactory {
     fun createHeadersEntity(
         fileDetails: FileUploadRequest,
-        fileHeaders: String
+        fileHeaders: String,
+        dynamicTableName: String
     ): ExistingHeaders {
         return ExistingHeaders().also {
-            it.provider = fileDetails.provider
+            it.provider = fileDetails.provider?.lowercase()
             it.traceType = fileDetails.traceType
             it.headersListAsString = fileHeaders
+            it.dynamicSchemaName = dynamicTableName
         }
     }
 }
