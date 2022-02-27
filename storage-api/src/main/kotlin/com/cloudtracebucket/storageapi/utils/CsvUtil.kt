@@ -3,6 +3,8 @@ package com.cloudtracebucket.storageapi.utils
 import com.cloudtracebucket.storageapi.exception.UtilException
 import com.cloudtracebucket.storageapi.pojo.enums.CsvStandardDelimiter
 import com.cloudtracebucket.storageapi.utils.FileUtil.CSV_MIME_TYPE
+import com.cloudtracebucket.storageapi.utils.FileUtil.fileToMultipartFile
+import com.cloudtracebucket.storageapi.utils.FileUtil.multipartFileToFile
 import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -48,7 +50,7 @@ object CsvUtil {
     }
 
     fun replaceHeadersInFile(multipartFile: MultipartFile, headersAsString: String): MultipartFile {
-        val file = FileUtil.multipartFileToFile(multipartFile)
+        val file = multipartFileToFile(multipartFile)
 
         try {
             val lines = FileUtils.readLines(file, Charset.defaultCharset())
@@ -58,7 +60,7 @@ object CsvUtil {
             throw UtilException("Failed to re-write headers in file ${file.name}", e)
         }
 
-        return FileUtil.fileToMultipartFile(file, CSV_MIME_TYPE)
+        return fileToMultipartFile(file, CSV_MIME_TYPE)
     }
 
     fun listToString(

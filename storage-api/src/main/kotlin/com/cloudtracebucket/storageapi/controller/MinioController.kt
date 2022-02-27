@@ -72,6 +72,10 @@ class MinioController @Autowired constructor(
 
         try {
             val headers = getCsvHeaders(file, fileDetails.delimiter!!)
+            val originalFilename = file.originalFilename ?: file.name
+            // needed for creating dynamic table creation
+            fileDetails.originalFilename = originalFilename
+
             val formattedFile = fileService.prepareFileForProcessing(file, fileDetails)
             val pathOfFile = Path.of(formattedFile.originalFilename ?: formattedFile.name)
 

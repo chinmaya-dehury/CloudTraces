@@ -5,6 +5,9 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.time.LocalDateTime
+import org.apache.commons.io.FilenameUtils.getExtension
+import org.apache.commons.io.FilenameUtils.removeExtension
 import org.apache.commons.io.IOUtils
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
@@ -14,7 +17,7 @@ object FileUtil {
 
     @Throws(IOException::class)
     fun multipartFileToFile(multipartFile: MultipartFile): File {
-        val convFile = File(multipartFile.originalFilename ?: multipartFile.name)
+        val convFile = File(formatFilename(multipartFile))
 
         convFile.createNewFile()
 
@@ -30,5 +33,13 @@ object FileUtil {
         val input = FileInputStream(file)
 
         return MockMultipartFile(file.name, file.name, contentType, IOUtils.toByteArray(input))
+    }
+
+    private fun formatFilename(multipartFile: MultipartFile): String {
+        val filename = multipartFile.originalFilename ?: multipartFile.name
+        val fileExtension = getExtension(filename)
+        val filenameWithoutExtension = removeExtension(filename)
+
+        return "$filenameWithoutExtension-${LocalDateTime.now()}.${fileExtension}"
     }
 }

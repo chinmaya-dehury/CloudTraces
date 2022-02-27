@@ -19,4 +19,6 @@ class FileUploadRequest {
     @NotNull(message = "File delimiter cannot be null or empty")
     @NotEmpty
     var delimiter: CsvStandardDelimiter? = null
+
+    var originalFilename: String? = null
 }

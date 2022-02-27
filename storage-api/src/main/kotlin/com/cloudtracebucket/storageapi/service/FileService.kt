@@ -15,7 +15,7 @@ import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getDelimiterSetting
 import com.cloudtracebucket.storageapi.utils.CsvUtil.listToString
 import com.cloudtracebucket.storageapi.utils.CsvUtil.replaceHeadersInFile
-import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.FilenameUtils.removeExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -40,7 +40,7 @@ class FileService @Autowired constructor(
 
         if (existingHeaders == null) {
             val fileUrl = getMinioObjectUrl(formattedFile.originalFilename ?: formattedFile.name)
-            val dynamicTableName = generateTargetTableName(formattedFile, fileDetails.provider!!)
+            val dynamicTableName = generateTargetTableName(fileDetails)
 
             existingHeaders = existingHeadersFactory.createHeadersEntity(fileDetails, stringifiedHeadersList, dynamicTableName)
             csvToTableRepository.runNativeQuery(dynamicTableName, fileUrl, delimiter.second, fileHeaders.size)
@@ -80,8 +80,12 @@ class FileService @Autowired constructor(
         return "$MINIO_INTERNAL_HOST/$MINIO_BUCKET_NAME/$filename"
     }
 
-    private fun generateTargetTableName(multipartFile: MultipartFile, provider: String): String {
-        val filenameWithoutExtension = FilenameUtils.removeExtension(multipartFile.originalFilename ?: multipartFile.name)
-        return "${provider}_$filenameWithoutExtension".lowercase()
+    private fun generateTargetTableName(fileDetails: FileUploadRequest): String {
+        val filenameWithoutExtension = removeExtension(fileDetails.originalFilename)
+        val formattedProvider = fileDetails.provider!!
+            .trim()
+            .replace("\\s+".toRegex(), "_")
+
+        return "${formattedProvider}_${fileDetails.traceType}".lowercase()
     }
 }
