@@ -1,7 +1,7 @@
 package com.cloudtracebucket.storageapi.service
 
-import Environment.MINIO_BUCKET_NAME
-import Environment.MINIO_INTERNAL_HOST
+import Constants.MINIO_BUCKET_NAME
+import Constants.MINIO_INTERNAL_HOST
 import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.exception.FileServiceException
 import com.cloudtracebucket.storageapi.exception.UtilException

@@ -1,5 +1,6 @@
 package com.cloudtracebucket.storageapi.factory
 
+import Constants.targetSchemaMap
 import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.hibernate.ExistingHeaders
 import org.springframework.stereotype.Component
@@ -16,6 +17,7 @@ class ExistingHeadersFactory {
             it.traceType = fileDetails.traceType
             it.headersListAsString = fileHeaders
             it.dynamicSchemaName = dynamicTableName
+            it.targetSchema = targetSchemaMap[fileDetails.traceType]
         }
     }
 }
