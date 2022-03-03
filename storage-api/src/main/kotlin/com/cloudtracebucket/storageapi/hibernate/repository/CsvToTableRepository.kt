@@ -10,7 +10,7 @@ class CsvToTableRepository @Autowired constructor(
     private val entityManager: EntityManager,
 ) : CustomNativeRepository {
 
-    override fun runNativeQuery(
+    override fun createSchemaFromCsv(
         targetTableName: String,
         csvPath: String,
         delimiter: String,
@@ -25,6 +25,21 @@ class CsvToTableRepository @Autowired constructor(
             .setParameter("csv_path", csvPath)
             .setParameter("delimiter", delimiter)
             .setParameter("col_count", columnCount)
+            .singleResult
+    }
+
+    override fun insertCsvToExistingSchema(
+        targetTableName: String,
+        csvPath: String,
+        delimiter: String
+    ) {
+        entityManager.createStoredProcedureQuery("insert_csv_to_existing_schema")
+            .registerStoredProcedureParameter("target_table", String::class.java, ParameterMode.IN)
+            .registerStoredProcedureParameter("csv_path", String::class.java, ParameterMode.IN)
+            .registerStoredProcedureParameter("delimiter", String::class.java, ParameterMode.IN)
+            .setParameter("target_table", targetTableName)
+            .setParameter("csv_path", csvPath)
+            .setParameter("delimiter", delimiter)
             .singleResult
     }
 }

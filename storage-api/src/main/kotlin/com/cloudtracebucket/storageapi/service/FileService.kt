@@ -15,7 +15,7 @@ import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getDelimiterSetting
 import com.cloudtracebucket.storageapi.utils.CsvUtil.listToString
 import com.cloudtracebucket.storageapi.utils.CsvUtil.replaceHeadersInFile
-import org.apache.commons.io.FilenameUtils.removeExtension
+import java.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -33,18 +33,24 @@ class FileService @Autowired constructor(
         fileDetails: FileUploadRequest,
         fileHeaders: List<String>
     ) {
-        val delimiter = getDelimiterSetting(fileDetails.delimiter!!)
+        val (_, delimiter) = getDelimiterSetting(fileDetails.delimiter!!)
+        val fileUrl = getMinioObjectUrl(formattedFile.originalFilename ?: formattedFile.name)
 
         val stringifiedHeadersList = listToString(fileHeaders)
         var existingHeaders = checkIfHeadersExist(stringifiedHeadersList)
 
-        if (existingHeaders == null) {
-            val fileUrl = getMinioObjectUrl(formattedFile.originalFilename ?: formattedFile.name)
-            val dynamicTableName = generateTargetTableName(fileDetails)
-
-            existingHeaders = existingHeadersFactory.createHeadersEntity(fileDetails, stringifiedHeadersList, dynamicTableName)
-            csvToTableRepository.runNativeQuery(dynamicTableName, fileUrl, delimiter.second, fileHeaders.size)
-            headersRepository.save(existingHeaders)
+        when (existingHeaders) {
+            null -> {
+                val dynamicTableName = generateTargetTableName(fileDetails)
+                existingHeaders = existingHeadersFactory.createHeadersEntity(fileDetails, stringifiedHeadersList, dynamicTableName)
+                csvToTableRepository.createSchemaFromCsv(dynamicTableName, fileUrl, delimiter, fileHeaders.size)
+                headersRepository.save(existingHeaders)
+            }
+            else -> {
+                csvToTableRepository.insertCsvToExistingSchema(existingHeaders.dynamicSchemaName!!, fileUrl, delimiter)
+                existingHeaders.updateTime = LocalDateTime.now()
+                headersRepository.save(existingHeaders)
+            }
         }
 
         val fileMeta = fileFactory.createFileMetaEntity(formattedFile, fileDetails, existingHeaders)
@@ -81,7 +87,6 @@ class FileService @Autowired constructor(
     }
 
     private fun generateTargetTableName(fileDetails: FileUploadRequest): String {
-        val filenameWithoutExtension = removeExtension(fileDetails.originalFilename)
         val formattedProvider = fileDetails.provider!!
             .trim()
             .replace("\\s+".toRegex(), "_")
