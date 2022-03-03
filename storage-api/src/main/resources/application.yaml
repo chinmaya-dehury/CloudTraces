@@ -7,7 +7,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL92Dialect
-        show_sql: false
+        show_sql: true
         use_sql_comments: false
         format_sql: false
         naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -32,6 +32,6 @@ spring:
       max-request-size: 150MB
   minio:
     url : ${MINIO_URL}
-    bucket: cloud-trace-data-files
+    bucket: ${MINIO_BUCKET_NAME}
     access-key: ${MINIO_USER}
     secret-key: ${MINIO_PASSWORD}

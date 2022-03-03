@@ -42,7 +42,7 @@ class ExistingHeaders {
     @Column(name = "create_time", insertable = false, updatable = false)
     var createTime: LocalDateTime? = null
 
-    @Column(name = "update_time", insertable = false, updatable = false)
+    @Column(name = "update_time")
     var updateTime: LocalDateTime? = null
 
     @Column(name = "delete_time")

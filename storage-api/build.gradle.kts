@@ -46,9 +46,9 @@ dependencies {
     implementation("net.sf.supercsv:super-csv:2.4.0")
     implementation("net.sf.oval:oval:3.2.1")
     implementation("commons-io:commons-io:2.11.0")
+    implementation("org.springframework:spring-test:5.3.16")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.mockito:mockito-core:4.3.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.platform:junit-platform-runner:1.8.2")
 }

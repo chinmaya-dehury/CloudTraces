@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgresdb:
-    image: "postgres:${POSTGRES_VERSION}"
+    build: .
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U"]
       timeout: 45s
@@ -15,8 +15,8 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PWD}"
     ports:
       - "5432:5432"
-    networks:
-      - default
+    links:
+      - "minio:service"
   minio:
     image: minio/minio
     container_name: minio-storage

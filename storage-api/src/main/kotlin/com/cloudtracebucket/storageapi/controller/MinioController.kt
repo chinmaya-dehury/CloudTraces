@@ -5,6 +5,7 @@ import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.service.FileService
+import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.validator.FileValidator
 import com.jlefebure.spring.boot.minio.MinioException
 import com.jlefebure.spring.boot.minio.MinioService
@@ -70,10 +71,17 @@ class MinioController @Autowired constructor(
         }
 
         try {
-            fileService.processFile(file, fileDetails)
+            val headers = getCsvHeaders(file, fileDetails.delimiter!!)
+            val originalFilename = file.originalFilename ?: file.name
+            // needed for creating dynamic table creation
+            fileDetails.originalFilename = originalFilename
 
-            val pathOfFile = Path.of(file.originalFilename ?: file.name)
-            minioService.upload(pathOfFile, file.inputStream, file.contentType)
+            val formattedFile = fileService.prepareFileForProcessing(file, fileDetails)
+            val pathOfFile = Path.of(formattedFile.originalFilename ?: formattedFile.name)
+
+            minioService.upload(pathOfFile, formattedFile.inputStream, formattedFile.contentType)
+            fileService.processFile(formattedFile, fileDetails, headers)
+
             val response = fileFactory.createFileUploadResponse(file)
 
             return ResponseEntity(response, HttpStatus.OK)
