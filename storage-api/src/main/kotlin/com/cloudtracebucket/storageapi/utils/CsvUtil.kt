@@ -9,6 +9,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FileUtils.deleteQuietly
 import org.springframework.web.multipart.MultipartFile
 import org.supercsv.io.CsvBeanReader
 import org.supercsv.prefs.CsvPreference
@@ -60,7 +61,11 @@ object CsvUtil {
             throw UtilException("Failed to re-write headers in file ${file.name}", e)
         }
 
-        return fileToMultipartFile(file, CSV_MIME_TYPE)
+        val convertedMultipart = fileToMultipartFile(file, CSV_MIME_TYPE)
+        // otherwise converting to file creates temp file
+        deleteQuietly(file)
+
+        return convertedMultipart
     }
 
     fun listToString(

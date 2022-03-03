@@ -19,8 +19,6 @@ object FileUtil {
     fun multipartFileToFile(multipartFile: MultipartFile): File {
         val convFile = File(formatFilename(multipartFile))
 
-        convFile.createNewFile()
-
         multipartFile.inputStream.use {
                 inputStream -> Files.copy(inputStream, convFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
