@@ -18,7 +18,7 @@ CREATE TABLE "existing_headers"
     trace_type          trace_types        NOT NULL,
     target_schema       VARCHAR(255),
     create_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time         TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP,
     delete_time         TIMESTAMP                   DEFAULT NULL
 );
 
