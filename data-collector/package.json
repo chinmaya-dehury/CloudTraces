@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/chinmaya-dehury/CloudTraces#readme",
   "dependencies": {
-    "express": "^4.17.3"
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "pg": "^8.7.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
