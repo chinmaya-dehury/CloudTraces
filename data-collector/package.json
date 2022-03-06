@@ -4,7 +4,7 @@
   "description": "A module for collecting raw data from dymanically created tables and inserting it into generalised schemas",
   "main": "index.js",
   "scripts": {
-    "serve": "source .env && nodemon src/app.js"
+    "dev": "source .env && nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "express-basic-auth": "^1.2.1",
+    "morgan": "^1.10.0",
     "pg": "^8.7.3"
   },
   "devDependencies": {
