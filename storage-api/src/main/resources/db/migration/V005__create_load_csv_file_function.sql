@@ -43,7 +43,8 @@ BEGIN
 
     -- delete the columns row
     EXECUTE format('delete from temp_table where %s = %L', col_first, col_first);
-
+    -- add timestamp when the record was inserted
+    EXECUTE format('ALTER TABLE temp_table ADD COLUMN insert_time timestamp DEFAULT CURRENT_TIMESTAMP;');
     -- change the temp table name to the name given as parameter, if not blank
     IF length(target_table) > 0 THEN
         EXECUTE format('ALTER TABLE temp_table RENAME TO %I', target_table);
