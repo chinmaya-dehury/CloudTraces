@@ -16,8 +16,8 @@ app.use(basicAuth({
     unauthorizedResponse: getUnauthorizedResponse
 }));
 
-app.post('/collect-data', validateCollectDataReqBody, api.collectData);
 app.get('/status', api.getStatus);
+app.post('/collect-data', validateCollectDataReqBody, api.collectData);
 
 app.listen(port, () => {
    console.log(`App is running on port ${port}`);
