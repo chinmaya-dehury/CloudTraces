@@ -8,11 +8,13 @@ $BODY$
 
 DECLARE
 
-    curl_url TEXT;
+    prepared_copy_csv_statement TEXT;
 
 BEGIN
-    curl_url := format('curl "%s"', csv_file_url);
-    EXECUTE format('COPY %s FROM PROGRAM %L WITH DELIMITER ''%s'' QUOTE ''"'' CSV ', target_table, curl_url, delimiter);
+    SELECT prepare_csv_copy_query($1, $2, $3) INTO prepared_copy_csv_statement;
+
+    raise notice 'Value: %', prepared_copy_csv_statement;
+    EXECUTE format(prepared_copy_csv_statement);
 
     RETURN TRUE;
 END;
