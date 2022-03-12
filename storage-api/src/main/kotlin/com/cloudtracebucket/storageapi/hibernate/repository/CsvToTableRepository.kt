@@ -16,7 +16,7 @@ class CsvToTableRepository @Autowired constructor(
         delimiter: String,
         columnCount: Int,
     ) {
-        entityManager.createStoredProcedureQuery("load_csv_file")
+        entityManager.createStoredProcedureQuery("create_table_from_csv")
             .registerStoredProcedureParameter("target_table", String::class.java, ParameterMode.IN)
             .registerStoredProcedureParameter("csv_path", String::class.java, ParameterMode.IN)
             .registerStoredProcedureParameter("delimiter", String::class.java, ParameterMode.IN)
