@@ -1,5 +1,5 @@
 -- https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers
-CREATE OR REPLACE FUNCTION load_csv_file(
+CREATE OR REPLACE FUNCTION create_table_from_csv(
     target_table TEXT,
     csv_file_url TEXT,
     delimiter TEXT,
@@ -56,5 +56,5 @@ END;
 $BODY$
     LANGUAGE plpgsql VOLATILE
                      COST 100;
-ALTER FUNCTION load_csv_file(text, text, text, integer)
+ALTER FUNCTION create_table_from_csv(text, text, text, integer)
     OWNER TO admin;

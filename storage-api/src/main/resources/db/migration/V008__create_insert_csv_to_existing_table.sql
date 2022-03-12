@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION insert_csv_to_existing_schema(
+CREATE OR REPLACE FUNCTION insert_csv_to_existing_table(
     target_table TEXT,
     csv_file_url TEXT,
     delimiter TEXT)
@@ -21,5 +21,5 @@ END;
 $BODY$
     LANGUAGE plpgsql VOLATILE
                      COST 100;
-ALTER FUNCTION insert_csv_to_existing_schema(text, text, text)
+ALTER FUNCTION insert_csv_to_existing_table(text, text, text)
     OWNER TO admin;

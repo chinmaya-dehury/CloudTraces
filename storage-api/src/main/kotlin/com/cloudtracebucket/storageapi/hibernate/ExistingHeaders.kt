@@ -28,16 +28,16 @@ class ExistingHeaders {
     @Column(name = "file_headers")
     var headersListAsString: String? = null
 
-    @Column(name = "dynamic_schema_name")
-    var dynamicSchemaName: String? = null
+    @Column(name = "dynamic_table_name")
+    var dynamicTableName: String? = null
 
     @Column(name = "trace_type")
     @Type(type = "trace_types")
     @Enumerated(EnumType.STRING)
     var traceType: TraceType? = null
 
-    @Column(name = "target_schema")
-    var targetSchema: String? = null
+    @Column(name = "target_table_name")
+    var targetTableName: String? = null
 
     @Column(name = "create_time", insertable = false, updatable = false)
     var createTime: LocalDateTime? = null

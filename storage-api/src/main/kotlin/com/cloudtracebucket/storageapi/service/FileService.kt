@@ -43,11 +43,11 @@ class FileService @Autowired constructor(
             null -> {
                 val dynamicTableName = generateTargetTableName(fileDetails)
                 existingHeaders = existingHeadersFactory.createHeadersEntity(fileDetails, stringifiedHeadersList, dynamicTableName)
-                csvToTableRepository.createSchemaFromCsv(dynamicTableName, fileUrl, delimiter, fileHeaders.size)
+                csvToTableRepository.createTableFromCsv(dynamicTableName, fileUrl, delimiter, fileHeaders.size)
                 headersRepository.save(existingHeaders)
             }
             else -> {
-                csvToTableRepository.insertCsvToExistingSchema(existingHeaders.dynamicSchemaName!!, fileUrl, delimiter)
+                csvToTableRepository.insertCsvToExistingTable(existingHeaders.dynamicTableName!!, fileUrl, delimiter)
                 existingHeaders.updateTime = LocalDateTime.now()
                 headersRepository.save(existingHeaders)
             }

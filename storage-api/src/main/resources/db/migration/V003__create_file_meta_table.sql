@@ -5,12 +5,12 @@ CREATE TABLE "file_meta"
     file_size         BIGINT                      DEFAULT 0,
     file_format       VARCHAR(255)       NOT NULL,
     provider          VARCHAR(255)       NOT NULL,
-    headers_schema_id INT                NOT NULL,
+    headers_table_id INT                NOT NULL,
     upload_time       TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time       TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     delete_time       TIMESTAMP                   DEFAULT NULL,
-    CONSTRAINT fk_headers_schema
-        FOREIGN KEY (headers_schema_id)
+    CONSTRAINT fk_headers_table
+        FOREIGN KEY (headers_table_id)
             REFERENCES "existing_headers" (id)
 );
 

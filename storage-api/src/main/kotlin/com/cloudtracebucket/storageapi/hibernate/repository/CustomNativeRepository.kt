@@ -1,14 +1,14 @@
 package com.cloudtracebucket.storageapi.hibernate.repository
 
 interface CustomNativeRepository {
-    fun createSchemaFromCsv(
+    fun createTableFromCsv(
         targetTableName: String,
         csvPath: String,
         delimiter: String,
         columnCount: Int
     )
 
-    fun insertCsvToExistingSchema(
+    fun insertCsvToExistingTable(
         targetTableName: String,
         csvPath: String,
         delimiter: String
