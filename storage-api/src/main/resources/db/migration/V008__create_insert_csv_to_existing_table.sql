@@ -13,7 +13,6 @@ DECLARE
 BEGIN
     SELECT prepare_csv_copy_query($1, $2, $3) INTO prepared_copy_csv_statement;
 
-    raise notice 'Value: %', prepared_copy_csv_statement;
     EXECUTE format(prepared_copy_csv_statement);
 
     RETURN TRUE;

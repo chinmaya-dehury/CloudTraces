@@ -10,6 +10,11 @@ module.exports.validateCollectDataReqBody = [
     body('existingHeadersId')
         .isInt({ min: 1 })
         .withMessage('cannot be less than 0 or must be an integer'),
+    body('insertTime')
+        .not()
+        .isEmpty()
+        .isISO8601().toDate()
+        .withMessage('Must be a valid date time'),
     (req, res, next) => {
         const errors = validationResult(req);
 
