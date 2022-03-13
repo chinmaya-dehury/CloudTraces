@@ -13,7 +13,7 @@ module.exports.validateCollectDataReqBody = [
     body('insertTime')
         .not()
         .isEmpty()
-        .isISO8601().toDate()
+        .isISO8601()
         .withMessage('Must be a valid date time'),
     (req, res, next) => {
         const errors = validationResult(req);

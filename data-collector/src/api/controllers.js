@@ -5,7 +5,7 @@ const getStatus = (req, res) => {
 };
 
 const collectData = async (req, res) => {
-    const { rows, errors } = await dataCollectService.processDataCollection(req.body);
+    const { errors } = await dataCollectService.processDataCollection(req.body);
 
     if (errors && errors.length) {
         const timestamp = new Date();
