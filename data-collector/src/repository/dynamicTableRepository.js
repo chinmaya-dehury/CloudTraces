@@ -6,8 +6,8 @@ const findLatestInsertedRows = async (dynamicTableName, insertTime) => {
             `SELECT * FROM ${dynamicTableName} WHERE insert_time >= '${insertTime}'`
         );
         return rows;
-    } catch (error) {
-        throw error;
+    } catch (err) {
+        throw err;
     }
 };
 

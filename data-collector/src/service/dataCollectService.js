@@ -1,5 +1,7 @@
 const existingHeadersRepository = require('../repository/existingHeadersRepository');
 const dynamicTableRepository = require('../repository/dynamicTableRepository');
+const levenshteinService = require('../service/levenshteinService');
+const { generalisedTables } = require('../constants/constants');
 
 const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const result = {
@@ -14,8 +16,7 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         return result;
     }
 
-    // destruct row fields from DB
-    const { dynamic_table_name } = existingHeader[0];
+    const { target_table_name, dynamic_table_name, file_headers } = existingHeader[0];
 
     const formattedInsertTime = new Date(insertTime)
         .toISOString()
@@ -29,8 +30,21 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         return result;
     }
 
+    const similarColumns = findSimilarColumns(target_table_name, file_headers);
+
     return result;
 }
+
+const findSimilarColumns = (targetTblName, dynamicTblColsAsString) => {
+    const dynamicTblColumns = dynamicTblColsAsString.split(',');
+    const generalisedTblColumns = getGeneralisedTblColumns(targetTblName);
+
+    return levenshteinService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+};
+
+const getGeneralisedTblColumns = (targetTbl) => {
+    return generalisedTables[targetTbl].columns;
+};
 
 module.exports = {
   processDataCollection,
