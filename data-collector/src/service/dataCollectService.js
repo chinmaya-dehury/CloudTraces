@@ -2,6 +2,7 @@ const existingHeadersRepository = require('../repository/existingHeadersReposito
 const dynamicTableRepository = require('../repository/dynamicTableRepository');
 const levenshteinService = require('../service/levenshteinService');
 const { generalisedTables } = require('../constants/constants');
+const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
 
 const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const result = {
@@ -16,30 +17,45 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         return result;
     }
 
-    const { target_table_name, dynamic_table_name, file_headers } = existingHeader[0];
-
     const formattedInsertTime = new Date(insertTime)
         .toISOString()
         .replace('T', ' ')
         .replace('Z', '');
 
-    const latestInsertedRows = await dynamicTableRepository.findLatestInsertedRows(dynamic_table_name, formattedInsertTime);
+    const latestInsertedRows = await dynamicTableRepository.findLatestInsertedRows(
+        existingHeader[0].dynamic_table_name,
+        formattedInsertTime
+    );
 
     if (!latestInsertedRows.length) {
         result.errors.push('No records have been inserted lately');
         return result;
     }
 
-    const similarColumns = findSimilarColumns(target_table_name, file_headers);
+    const similarColumns = await findSimilarColumns(existingHeader[0], existingHeadersId);
 
     return result;
 }
 
-const findSimilarColumns = (targetTblName, dynamicTblColsAsString) => {
-    const dynamicTblColumns = dynamicTblColsAsString.split(',');
-    const generalisedTblColumns = getGeneralisedTblColumns(targetTblName);
+const findSimilarColumns = async ({ target_table_name, file_headers }, existingHeaderId) => {
+    let columnPointers = await findColumnPointersByExistingHeaderId(existingHeaderId);
 
-    return levenshteinService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+    if (columnPointers === null || !columnPointers.length) {
+        const dynamicTblColumns = file_headers.split(',');
+        const generalisedTblColumns = getGeneralisedTblColumns(target_table_name);
+        const similarColumns = levenshteinService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+
+        try {
+            columnPointers = new ColumnPointers(existingHeaderId, JSON.stringify(similarColumns));
+            await columnPointers.saveColumnPointers();
+
+            return columnPointers[0].column_pointers;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    return columnPointers[0].column_pointers;
 };
 
 const getGeneralisedTblColumns = (targetTbl) => {
