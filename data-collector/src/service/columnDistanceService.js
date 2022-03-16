@@ -1,4 +1,4 @@
-const levenshtein = require('js-levenshtein');
+const distance = require('jaro-winkler');
 
 const getSimilarColumns = (generalisedTblCols, dynamicTblCols) => {
     const res = [];
@@ -8,25 +8,25 @@ const getSimilarColumns = (generalisedTblCols, dynamicTblCols) => {
             const colsAndDistances = [];
 
             dynamicTblCols.forEach(dynCol => {
-                const levenshteinDis = levenshtein(genCol, dynCol);
+                const jaroWinklerDist = distance(genCol, dynCol, { caseSensitive: false });
 
                 colsAndDistances.push(
                     {
                         dynamicCol: dynCol,
                         generalisedCol: genCol,
-                        distance: levenshteinDis
+                        distance: jaroWinklerDist
                     }
                 );
             });
 
             const minDistanceCol = colsAndDistances.reduce((prev, current) => {
-                return (prev.distance < current.distance) ? prev : current;
+                return (current.distance > prev.distance) ? current : prev;
             });
 
             res.push(minDistanceCol);
         });
 
-        return res;
+        return res.filter(col => col.distance >= 0.8);
     }
 };
 

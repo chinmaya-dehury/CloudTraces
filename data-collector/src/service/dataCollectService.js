@@ -1,6 +1,6 @@
 const existingHeadersRepository = require('../repository/existingHeadersRepository');
 const dynamicTableRepository = require('../repository/dynamicTableRepository');
-const levenshteinService = require('../service/levenshteinService');
+const columnDistanceService = require('./columnDistanceService');
 const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
 
@@ -34,6 +34,11 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
 
     const similarColumns = await findSimilarColumns(existingHeader[0], existingHeadersId);
 
+    if (!similarColumns.length) {
+        result.errors.push(`No similar columns found`);
+        return result;
+    }
+
     return result;
 }
 
@@ -42,14 +47,19 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
 
     if (columnPointers === null || !columnPointers.length) {
         const dynamicTblColumns = file_headers.split(',');
+
         const generalisedTblColumns = getGeneralisedTblColumns(target_table_name);
-        const similarColumns = levenshteinService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+        const similarColumns = columnDistanceService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+
+        if (similarColumns && !similarColumns.length) {
+            return [];
+        }
 
         try {
             columnPointers = new ColumnPointers(existingHeaderId, JSON.stringify(similarColumns));
             await columnPointers.saveColumnPointers();
 
-            return columnPointers[0].column_pointers;
+            return similarColumns;
         } catch (err) {
             throw err;
         }
