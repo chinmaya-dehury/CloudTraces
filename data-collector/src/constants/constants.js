@@ -1,12 +1,55 @@
 const generalisedTables = {
     serverless_platform: {
-        columns: ['function_name', 'count', 'memory_mb'],
+        columnsData: [
+            {
+                column: 'function_name',
+                datatype: String
+            },
+            {
+                column: 'count',
+                datatype: BigInt
+            },
+            {
+                column: 'memory_mb',
+                datatype: BigInt
+            }
+        ],
     },
     cloud_storage: {
-        columns: ['read', 'write', 'blob_type', 'blob_bytes'],
+        columnsData: [
+            {
+                column: 'read',
+                datatype: Boolean
+            },
+            {
+                column: 'write',
+                datatype: Boolean
+            },
+            {
+                column: 'blob_type',
+                datatype: String
+            },
+            {
+                column: 'blob_bytes',
+                datatype: BigInt
+            }
+        ],
     },
     cloud_cluster: {
-        columns: ['plan_cpu', 'plan_disk', 'event_type'],
+        columns: [
+            {
+                column: 'plan_cpu',
+                datatype: BigInt
+            },
+            {
+                column: 'plan_disk',
+                datatype: BigInt
+            },
+            {
+                column: 'event_type',
+                datatype: String
+            }
+        ],
     }
 };
 
