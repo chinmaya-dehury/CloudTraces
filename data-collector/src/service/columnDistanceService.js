@@ -26,7 +26,7 @@ const getSimilarColumns = (generalisedTblCols, dynamicTblCols) => {
             res.push(minDistanceCol);
         });
 
-        return res.filter(col => col.distance >= 0.8);
+        return res.filter(col => col.distance >= 0.9);
     }
 };
 

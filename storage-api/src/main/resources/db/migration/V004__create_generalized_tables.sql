@@ -1,5 +1,3 @@
-CREATE TYPE event_types AS ENUM ('create', 'update', 'remove', 'delete');
-
 CREATE TABLE "serverless_platform"
 (
     id            SERIAL PRIMARY KEY NOT NULL,
@@ -30,7 +28,7 @@ CREATE TABLE "cloud_cluster"
     id          SERIAL PRIMARY KEY NOT NULL,
     plan_cpu    INT,
     plan_disk   BIGINT,
-    event_type  event_types,
+    event_type  VARCHAR(255),
     create_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     delete_time TIMESTAMP                   DEFAULT NULL

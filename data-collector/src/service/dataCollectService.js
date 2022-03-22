@@ -1,8 +1,9 @@
-const existingHeadersRepository = require('../repository/existingHeadersRepository');
-const dynamicTableRepository = require('../repository/dynamicTableRepository');
-const columnDistanceService = require('./columnDistanceService');
+const { findExistingHeadersById } = require('../repository/existingHeadersRepository');
+const { findLatestInsertedRows } = require('../repository/dynamicTableRepository');
+const { getSimilarColumns } = require('./columnDistanceService');
 const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
+const { castColumnsData } = require('../util/columnDataCastUtil');
 
 const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const result = {
@@ -10,7 +11,7 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         errors: []
     };
 
-    const existingHeader = await existingHeadersRepository.findExistingHeadersById(existingHeadersId);
+    const existingHeader = await findExistingHeadersById(existingHeadersId);
 
     if (!existingHeader.length) {
         result.errors.push(`Existing headers with id ${existingHeadersId} not found`);
@@ -22,12 +23,12 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         .replace('T', ' ')
         .replace('Z', '');
 
-    const latestInsertedRows = await dynamicTableRepository.findLatestInsertedRows(
+    const lastInserted = await findLatestInsertedRows(
         existingHeader[0].dynamic_table_name,
         formattedInsertTime
     );
 
-    if (!latestInsertedRows.length) {
+    if (!lastInserted.length) {
         result.errors.push('No records have been inserted lately');
         return result;
     }
@@ -47,11 +48,10 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
 
     if (columnPointers === null || !columnPointers.length) {
         const dynamicTblColumns = file_headers.split(',');
-
         const generalisedTblColumns = getGeneralisedTblColumns(target_table_name);
-        const similarColumns = columnDistanceService.getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
+        const similarColumns = getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
 
-        if (similarColumns && !similarColumns.length) {
+        if (similarColumns && !similarColumns.length || (dynamicTblColumns.length !== similarColumns.length)) {
             return [];
         }
 

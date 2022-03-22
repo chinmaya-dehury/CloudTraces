@@ -3,15 +3,15 @@ const generalisedTables = {
         columnsData: [
             {
                 column: 'function_name',
-                datatype: String
+                datatype: 'string'
             },
             {
                 column: 'count',
-                datatype: BigInt
+                datatype: 'number'
             },
             {
                 column: 'memory_mb',
-                datatype: BigInt
+                datatype: 'number'
             }
         ],
     },
@@ -19,19 +19,19 @@ const generalisedTables = {
         columnsData: [
             {
                 column: 'read',
-                datatype: Boolean
+                datatype: 'boolean'
             },
             {
                 column: 'write',
-                datatype: Boolean
+                datatype: 'boolean'
             },
             {
                 column: 'blob_type',
-                datatype: String
+                datatype: 'string'
             },
             {
                 column: 'blob_bytes',
-                datatype: BigInt
+                datatype: 'number'
             }
         ],
     },
@@ -39,15 +39,15 @@ const generalisedTables = {
         columns: [
             {
                 column: 'plan_cpu',
-                datatype: BigInt
+                datatype: 'number'
             },
             {
                 column: 'plan_disk',
-                datatype: BigInt
+                datatype: 'number'
             },
             {
                 column: 'event_type',
-                datatype: String
+                datatype: 'string'
             }
         ],
     }
