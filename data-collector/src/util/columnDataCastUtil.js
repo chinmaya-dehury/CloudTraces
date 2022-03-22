@@ -2,7 +2,7 @@ const { generalisedTables } = require('../constants/constants');
 const upcast  = require('upcast');
 
 const castColumnsData = (similarColumns, lastInsertedData, { target_table_name, provider }) => {
-    return lastInsertedData.map(data => {
+    const castedObjects = lastInsertedData.map(data => {
         const castedObj = {};
 
         similarColumns.forEach(col => {
@@ -30,6 +30,8 @@ const castColumnsData = (similarColumns, lastInsertedData, { target_table_name, 
 
         return castedObj;
     });
+
+    return castedObjects.filter(obj => Object.keys(obj).length !== 0);
 };
 
 const getGeneralisedTblData = (targetTblName, columnName) => {

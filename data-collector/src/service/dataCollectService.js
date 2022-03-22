@@ -36,7 +36,14 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const similarColumns = await findSimilarColumns(existingHeader[0], existingHeadersId);
 
     if (!similarColumns.length) {
-        result.errors.push(`No similar columns found`);
+        result.errors.push('No similar columns found');
+        return result;
+    }
+
+    const castedData = castColumnsData(similarColumns, lastInserted, existingHeader[0]);
+
+    if (!castedData || !castedData.length) {
+        result.errors.push('No data was casted');
         return result;
     }
 
