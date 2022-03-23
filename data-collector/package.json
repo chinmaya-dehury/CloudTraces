@@ -24,6 +24,7 @@
     "jaro-winkler": "^0.2.8",
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
+    "pg-format": "^1.0.4",
     "upcast": "^4.0.0"
   },
   "devDependencies": {

@@ -3,7 +3,8 @@ const { findLatestInsertedRows } = require('../repository/dynamicTableRepository
 const { getSimilarColumns } = require('./columnDistanceService');
 const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
-const { castColumnsData } = require('../util/columnDataCastUtil');
+const { castColumnsData } = require('../helpers/columnDataCastHelper');
+const { insertIntoServerlessPlatform } = require('../repository/generalisedTableRepository');
 
 const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const result = {
