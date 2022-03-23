@@ -10,21 +10,18 @@ const castColumnsData = (similarColumns, lastInsertedData, { target_table_name, 
             let castedColData;
 
             if (!column) {
+                console.error(`No columns data found for target table ${target_table_name}`);
                 return;
             }
 
-            try {
-                castedColData = upcast.to(data[col.dynamicCol], column.datatype);
-            } catch (castErr) {
-                console.error(castErr);
-                return;
-            }
+            castedColData = upcast.to(data[col.dynamicCol], column.datatype);
 
             if (!castedColData) {
+                console.warn(`${data[col.dynamicCol]} was not casted to ${column.datatype}`);
                 return;
             }
 
-            castedObj[col.generalisedCol] = upcast.to(data[col.dynamicCol], column.datatype);
+            castedObj[col.generalisedCol] = castedColData;
             castedObj['provider'] = provider;
         });
 

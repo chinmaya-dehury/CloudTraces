@@ -5,6 +5,20 @@ const morgan = require('morgan');
 const { validateCollectDataReqBody } = require('./validator/CollectDataValidator');
 const app = express();
 const port = 6002;
+const errorHandler = fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next))
+        .catch(err => {
+            const timestamp = new Date();
+            // log the error
+            console.error(err)
+            res.status(500).send(
+                {
+                    errors: [ 'Internal Server Error' ],
+                    timestamp: timestamp.toISOString()
+                }
+            );
+        });
+};
 
 require('dotenv').config();
 
@@ -17,7 +31,7 @@ app.use(basicAuth({
 }));
 
 app.get('/status', api.getStatus);
-app.post('/collect-data', validateCollectDataReqBody, api.collectData);
+app.post('/collect-data', validateCollectDataReqBody, errorHandler(api.collectData));
 
 app.listen(port, () => {
    console.log(`App is running on port ${port}`);
