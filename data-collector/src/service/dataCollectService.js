@@ -4,12 +4,13 @@ const { getSimilarColumns } = require('./columnDistanceService');
 const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
 const { castColumnsData } = require('../helpers/columnDataCastHelper');
-const { insertIntoServerlessPlatform } = require('../repository/generalisedTableRepository');
+const { insertIntoGeneralisedTable } = require('../repository/generalisedTableRepository');
 
 const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     const result = {
         insertedRows: 0,
-        errors: []
+        errors: [],
+        timestamp: new Date().toISOString()
     };
 
     const existingHeader = await findExistingHeadersById(existingHeadersId);
@@ -48,6 +49,8 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         return result;
     }
 
+    result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader[0]);
+
     return result;
 }
 
@@ -59,7 +62,7 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
         const generalisedTblColumns = getGeneralisedTblColumns(target_table_name);
         const similarColumns = getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
 
-        if (similarColumns && !similarColumns.length || (dynamicTblColumns.length !== similarColumns.length)) {
+        if (similarColumns && !similarColumns.length || (generalisedTblColumns.length !== similarColumns.length)) {
             return [];
         }
 

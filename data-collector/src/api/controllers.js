@@ -5,19 +5,13 @@ const getStatus = (req, res) => {
 };
 
 const collectData = async (req, res) => {
-    const { errors } = await dataCollectService.processDataCollection(req.body);
+    const response = await dataCollectService.processDataCollection(req.body);
 
-    if (errors && errors.length) {
-        const timestamp = new Date();
-
-        return res.status(400).json(
-            {
-                errors: errors,
-                timestamp: timestamp.toISOString()
-            }
-        );
+    if (response.errors && response.errors.length) {
+        return res.status(400).json(response);
     }
-    res.status(200).json({ ok: true });
+
+    res.status(200).json(response);
 };
 
 module.exports = {
