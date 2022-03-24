@@ -34,6 +34,14 @@ CREATE TABLE "cloud_cluster"
     delete_time TIMESTAMP                   DEFAULT NULL
 );
 
+CREATE INDEX func_name_index ON "serverless_platform" (function_name);
+CREATE INDEX serverless_platform_provider_index ON "serverless_platform" (provider);
+
+CREATE INDEX cloud_storage_provider_index ON "cloud_storage" (provider);
+CREATE INDEX blob_type_uindex ON "cloud_storage" (blob_type);
+
+CREATE INDEX event_type_index ON "cloud_cluster" (event_type);
+
 CREATE TRIGGER serverless_platform_trigger
     BEFORE UPDATE
     ON "serverless_platform"
