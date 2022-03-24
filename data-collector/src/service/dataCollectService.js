@@ -13,12 +13,14 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         timestamp: new Date().toISOString()
     };
 
-    const existingHeader = await findExistingHeadersById(existingHeadersId);
+    const existingHeaders = await findExistingHeadersById(existingHeadersId);
 
-    if (!existingHeader.length) {
+    if (!existingHeaders.length) {
         result.errors.push(`Existing headers with id ${existingHeadersId} not found`);
         return result;
     }
+
+    const existingHeader = existingHeaders[0];
 
     const formattedInsertTime = new Date(insertTime)
         .toISOString()
@@ -26,7 +28,7 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         .replace('Z', '');
 
     const lastInserted = await findLatestInsertedRows(
-        existingHeader[0].dynamic_table_name,
+        existingHeader.dynamic_table_name,
         formattedInsertTime
     );
 
@@ -35,21 +37,21 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
         return result;
     }
 
-    const similarColumns = await findSimilarColumns(existingHeader[0], existingHeadersId);
+    const similarColumns = await findSimilarColumns(existingHeader, existingHeadersId);
 
     if (!similarColumns.length) {
         result.errors.push('No similar columns found');
         return result;
     }
 
-    const castedData = castColumnsData(similarColumns, lastInserted, existingHeader[0]);
+    const castedData = castColumnsData(similarColumns, lastInserted, existingHeader);
 
     if (!castedData || !castedData.length) {
         result.errors.push('No data was casted');
         return result;
     }
 
-    result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader[0]);
+    result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader);
 
     return result;
 }
