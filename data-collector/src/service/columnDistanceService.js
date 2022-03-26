@@ -19,11 +19,11 @@ const getSimilarColumns = (generalisedTblCols, dynamicTblCols) => {
                 );
             });
 
-            const minDistanceCol = colsAndDistances.reduce((prev, current) => {
+            const maxDistanceCol = colsAndDistances.reduce((prev, current) => {
                 return (current.distance > prev.distance) ? current : prev;
             });
 
-            res.push(minDistanceCol);
+            res.push(maxDistanceCol);
         });
 
         return res.filter(col => col.distance >= 0.9);

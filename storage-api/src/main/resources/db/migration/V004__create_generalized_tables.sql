@@ -4,6 +4,7 @@ CREATE TABLE "serverless_platform"
     function_name VARCHAR(255),
     count         BIGINT,
     memory_mb     BIGINT,
+    time          VARCHAR(255),
     provider      VARCHAR(255),
     create_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,

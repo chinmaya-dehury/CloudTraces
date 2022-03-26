@@ -12,6 +12,10 @@ const generalisedTables = {
             {
                 column: 'memory_mb',
                 datatype: 'number'
+            },
+            {
+                column: 'time',
+                datatype: 'string'
             }
         ],
     },
