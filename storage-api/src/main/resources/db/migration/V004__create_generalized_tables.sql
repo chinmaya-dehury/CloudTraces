@@ -1,11 +1,10 @@
-CREATE TYPE event_types AS ENUM ('create', 'update', 'remove', 'delete');
-
 CREATE TABLE "serverless_platform"
 (
     id            SERIAL PRIMARY KEY NOT NULL,
     function_name VARCHAR(255),
     count         BIGINT,
     memory_mb     BIGINT,
+    time          VARCHAR(255),
     provider      VARCHAR(255),
     create_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -30,11 +29,19 @@ CREATE TABLE "cloud_cluster"
     id          SERIAL PRIMARY KEY NOT NULL,
     plan_cpu    INT,
     plan_disk   BIGINT,
-    event_type  event_types,
+    event_type  VARCHAR(255),
     create_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     delete_time TIMESTAMP                   DEFAULT NULL
 );
+
+CREATE INDEX func_name_index ON "serverless_platform" (function_name);
+CREATE INDEX serverless_platform_provider_index ON "serverless_platform" (provider);
+
+CREATE INDEX cloud_storage_provider_index ON "cloud_storage" (provider);
+CREATE INDEX blob_type_uindex ON "cloud_storage" (blob_type);
+
+CREATE INDEX event_type_index ON "cloud_cluster" (event_type);
 
 CREATE TRIGGER serverless_platform_trigger
     BEFORE UPDATE

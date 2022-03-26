@@ -1,0 +1,33 @@
+{
+  "name": "data-collector",
+  "version": "1.0.0",
+  "description": "A module for collecting raw data from dymanically created tables and inserting it into generalised schemas",
+  "main": "index.js",
+  "scripts": {
+    "dev": "source .env && nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chinmaya-dehury/CloudTraces.git"
+  },
+  "author": "Edgar Selihov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chinmaya-dehury/CloudTraces/issues"
+  },
+  "homepage": "https://github.com/chinmaya-dehury/CloudTraces#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-basic-auth": "^1.2.1",
+    "express-validator": "^6.14.0",
+    "jaro-winkler": "^0.2.8",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.3",
+    "pg-format": "^1.0.4",
+    "upcast": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

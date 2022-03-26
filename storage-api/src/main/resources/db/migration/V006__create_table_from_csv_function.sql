@@ -1,5 +1,5 @@
 -- https://stackoverflow.com/questions/21018256/can-i-automatically-create-a-table-in-postgresql-from-a-csv-file-with-headers
-CREATE OR REPLACE FUNCTION load_csv_file(
+CREATE OR REPLACE FUNCTION create_table_from_csv(
     target_table TEXT,
     csv_file_url TEXT,
     delimiter TEXT,
@@ -43,7 +43,8 @@ BEGIN
 
     -- delete the columns row
     EXECUTE format('delete from temp_table where %s = %L', col_first, col_first);
-
+    -- add timestamp when the record was inserted
+    EXECUTE format('ALTER TABLE temp_table ADD COLUMN insert_time timestamp DEFAULT CURRENT_TIMESTAMP;');
     -- change the temp table name to the name given as parameter, if not blank
     IF length(target_table) > 0 THEN
         EXECUTE format('ALTER TABLE temp_table RENAME TO %I', target_table);
@@ -55,5 +56,5 @@ END;
 $BODY$
     LANGUAGE plpgsql VOLATILE
                      COST 100;
-ALTER FUNCTION load_csv_file(text, text, text, integer)
+ALTER FUNCTION create_table_from_csv(text, text, text, integer)
     OWNER TO admin;
