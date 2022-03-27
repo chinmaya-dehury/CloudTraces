@@ -3,6 +3,7 @@ import com.cloudtracebucket.storageapi.pojo.enums.TraceType
 object Constants {
     val MINIO_INTERNAL_HOST = System.getenv("MINIO_INTERNAL_HOST")
     val MINIO_BUCKET_NAME = System.getenv("MINIO_BUCKET_NAME")
+    val DATA_COLLECTOR_URL = System.getenv("DATA_COLLECTOR_URL")
 
     val targetTableMap: Map<TraceType, String> = mapOf(
         TraceType.SERVERLESS_PLATFORM to "serverless_platform",
