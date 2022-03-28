@@ -22,10 +22,12 @@ class FileFactory {
 
     fun createFileUploadResponse(
         file: MultipartFile,
+        dataCollected: Boolean = false,
         errors: List<String> = listOf(),
     ) = FileUploadResponse().also {
         it.fileName = file.originalFilename ?: file.name
         it.errors = errors
+        it.dataCollected = dataCollected
     }
 
     fun createFileMetaEntity(

@@ -5,6 +5,7 @@ import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.service.FileService
+import com.cloudtracebucket.storageapi.service.RestService
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.validator.FileValidator
 import com.jlefebure.spring.boot.minio.MinioException
@@ -31,7 +32,8 @@ class MinioController @Autowired constructor(
     private val minioService: MinioService,
     private val fileValidator: FileValidator,
     private val fileFactory: FileFactory,
-    private val fileService: FileService
+    private val fileService: FileService,
+    private val restService: RestService,
 ) {
 
     @GetMapping
@@ -66,7 +68,7 @@ class MinioController @Autowired constructor(
         val validationResults = fileValidator.validateFileUploadRequest(file, fileDetails)
 
         if (validationResults.isNotEmpty()) {
-            val response = fileFactory.createFileUploadResponse(file, validationResults)
+            val response = fileFactory.createFileUploadResponse(file, false, validationResults)
             return ResponseEntity(response, HttpStatus.BAD_REQUEST)
         }
 
@@ -80,9 +82,11 @@ class MinioController @Autowired constructor(
             val pathOfFile = Path.of(formattedFile.originalFilename ?: formattedFile.name)
 
             minioService.upload(pathOfFile, formattedFile.inputStream, formattedFile.contentType)
-            fileService.processFile(formattedFile, fileDetails, headers)
+            val dataCollectorRequest = fileService.processFile(formattedFile, fileDetails, headers)
 
-            val response = fileFactory.createFileUploadResponse(file)
+            val collectedData = restService.postTriggerDataCollector(dataCollectorRequest)
+            val dataCollected = collectedData?.insertedRows!! > 0
+            val response = fileFactory.createFileUploadResponse(file, dataCollected, collectedData.errors)
 
             return ResponseEntity(response, HttpStatus.OK)
         } catch (e: MinioException) {
