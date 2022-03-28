@@ -18,9 +18,9 @@ class GlobalExceptionHandler {
     fun fileAlreadyExistsException(e: FileServiceException): ResponseEntity<ErrorDetails> {
         val badRequest = HttpStatus.BAD_REQUEST
         val errorDetails = ErrorDetails(
-            LocalDateTime.now(),
             badRequest.value(),
-            e.message ?: e.localizedMessage
+            e.message ?: e.localizedMessage,
+            LocalDateTime.now()
         )
 
         return ResponseEntity(errorDetails, badRequest)
@@ -31,9 +31,9 @@ class GlobalExceptionHandler {
     fun dataCollectionException(e: DataCollectorException): ResponseEntity<ErrorDetails> {
         val badRequest = HttpStatus.BAD_REQUEST
         val errorDetails = ErrorDetails(
-            LocalDateTime.now(),
             badRequest.value(),
-            e.message ?: e.localizedMessage
+            e.message ?: e.localizedMessage,
+            LocalDateTime.now()
         )
 
         return ResponseEntity(errorDetails, badRequest)

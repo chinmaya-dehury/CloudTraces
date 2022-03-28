@@ -2,6 +2,7 @@ package com.cloudtracebucket.storageapi.service
 
 import Constants.DATA_COLLECTOR_PASSWORD
 import Constants.DATA_COLLECTOR_USERNAME
+import com.cloudtracebucket.storageapi.errorHandlers.RestServiceErrorHandler
 import com.cloudtracebucket.storageapi.exception.DataCollectorException
 import com.cloudtracebucket.storageapi.pojo.request.DataCollectorRequest
 import com.cloudtracebucket.storageapi.pojo.response.DataCollectorResponse
@@ -10,7 +11,6 @@ import okhttp3.Credentials
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -21,6 +21,7 @@ import kotlin.jvm.Throws
 class RestService {
 
     private val restTemplate: RestTemplate = RestTemplateBuilder()
+        .errorHandler(RestServiceErrorHandler())
         .setConnectTimeout(Duration.ofSeconds(30L))
         .build()
 
@@ -33,6 +34,7 @@ class RestService {
             contentType = MediaType.APPLICATION_JSON
             accept = listOf(MediaType.APPLICATION_JSON)
             set("x-request-source", "storage-api")
+            set("Accept", MediaType.APPLICATION_JSON_VALUE)
             set("Authorization", credentials)
         }
 
@@ -49,12 +51,7 @@ class RestService {
             DataCollectorResponse::class.java
         )
 
-        return if (response.statusCode == HttpStatus.OK) {
-            response.body
-        } else {
-            val errors = response.body?.errors?.joinToString("-") ?: "Data Collector internal error"
-            throw DataCollectorException(errors)
-        }
+        return response.body
     }
 
     private fun getDataCollectorUrl(): String {

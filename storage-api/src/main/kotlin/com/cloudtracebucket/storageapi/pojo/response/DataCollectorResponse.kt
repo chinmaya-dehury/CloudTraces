@@ -1,7 +1,7 @@
 package com.cloudtracebucket.storageapi.pojo.response
 
-data class DataCollectorResponse(
-    val insertedRows: Int,
-    val errors: List<String>,
-    val timestamp: String
-)
+class DataCollectorResponse {
+    val insertedRows: Int = 0
+    val errors: List<String> = listOf()
+    val timestamp: String? = null
+}
