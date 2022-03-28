@@ -14,22 +14,15 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     };
 
     const existingHeaders = await findExistingHeadersById(existingHeadersId);
-
     if (!existingHeaders.length) {
         result.errors.push(`Existing headers with id ${existingHeadersId} not found`);
         return result;
     }
 
     const existingHeader = existingHeaders[0];
-
-    const formattedInsertTime = new Date(insertTime)
-        .toISOString()
-        .replace('T', ' ')
-        .replace('Z', '');
-
     const lastInserted = await findLatestInsertedRows(
         existingHeader.dynamic_table_name,
-        formattedInsertTime
+        insertTime
     );
 
     if (!lastInserted.length) {
