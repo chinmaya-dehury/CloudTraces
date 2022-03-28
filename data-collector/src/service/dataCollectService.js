@@ -5,8 +5,9 @@ const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
 const { castColumnsData } = require('../helpers/columnDataCastHelper');
 const { insertIntoGeneralisedTable } = require('../repository/generalisedTableRepository');
+const { insertDataCollectionResults } = require('../repository/dataCollectorRepository');
 
-const processDataCollection = async ({ existingHeadersId, insertTime }) => {
+const processDataCollection = async ({ uuid, existingHeadersId, insertTime }) => {
     const result = {
         insertedRows: 0,
         errors: [],
@@ -46,6 +47,7 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
 
     result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader);
 
+    await insertDataCollectionResults(uuid, existingHeadersId, result.insertedRows)
     return result;
 }
 
