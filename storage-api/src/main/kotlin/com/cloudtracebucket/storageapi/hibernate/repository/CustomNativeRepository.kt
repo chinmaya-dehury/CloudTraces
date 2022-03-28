@@ -13,4 +13,6 @@ interface CustomNativeRepository {
         csvPath: String,
         delimiter: String
     )
+
+    fun getLatestInsertTime(dynamicTblName: String): String?
 }

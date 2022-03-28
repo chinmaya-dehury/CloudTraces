@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class CsvToTableRepository @Autowired constructor(
+class DynamicTableRepository @Autowired constructor(
     private val entityManager: EntityManager,
 ) : CustomNativeRepository {
 
@@ -41,5 +41,14 @@ class CsvToTableRepository @Autowired constructor(
             .setParameter("csv_path", csvPath)
             .setParameter("delimiter", delimiter)
             .singleResult
+    }
+
+    override fun getLatestInsertTime(dynamicTblName: String): String? {
+        val latestInsertTime = entityManager.createStoredProcedureQuery("get_latest_insert_time")
+            .registerStoredProcedureParameter("dynamic_table_name", String::class.java, ParameterMode.IN)
+            .setParameter("dynamic_table_name", dynamicTblName)
+            .singleResult
+
+        return latestInsertTime.toString()
     }
 }

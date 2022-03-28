@@ -8,7 +8,7 @@ import com.cloudtracebucket.storageapi.exception.UtilException
 import com.cloudtracebucket.storageapi.factory.ExistingHeadersFactory
 import com.cloudtracebucket.storageapi.factory.FileFactory
 import com.cloudtracebucket.storageapi.hibernate.ExistingHeaders
-import com.cloudtracebucket.storageapi.hibernate.repository.CsvToTableRepository
+import com.cloudtracebucket.storageapi.hibernate.repository.DynamicTableRepository
 import com.cloudtracebucket.storageapi.hibernate.repository.ExistingHeadersRepository
 import com.cloudtracebucket.storageapi.hibernate.repository.FileMetaRepository
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
@@ -25,7 +25,7 @@ class FileService @Autowired constructor(
     private val fileMetaRepository: FileMetaRepository,
     private val headersRepository: ExistingHeadersRepository,
     private val existingHeadersFactory: ExistingHeadersFactory,
-    private val csvToTableRepository: CsvToTableRepository,
+    private val dynamicTableRepository: DynamicTableRepository,
     private val fileFactory: FileFactory,
 ) {
     fun processFile(
@@ -43,11 +43,11 @@ class FileService @Autowired constructor(
             null -> {
                 val dynamicTableName = generateTargetTableName(fileDetails)
                 existingHeaders = existingHeadersFactory.createHeadersEntity(fileDetails, stringifiedHeadersList, dynamicTableName)
-                csvToTableRepository.createTableFromCsv(dynamicTableName, fileUrl, delimiter, fileHeaders.size)
+                dynamicTableRepository.createTableFromCsv(dynamicTableName, fileUrl, delimiter, fileHeaders.size)
                 headersRepository.save(existingHeaders)
             }
             else -> {
-                csvToTableRepository.insertCsvToExistingTable(existingHeaders.dynamicTableName!!, fileUrl, delimiter)
+                dynamicTableRepository.insertCsvToExistingTable(existingHeaders.dynamicTableName!!, fileUrl, delimiter)
                 existingHeaders.updateTime = LocalDateTime.now()
                 headersRepository.save(existingHeaders)
             }
