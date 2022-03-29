@@ -13,12 +13,11 @@ import com.cloudtracebucket.storageapi.hibernate.repository.DynamicTableReposito
 import com.cloudtracebucket.storageapi.hibernate.repository.ExistingHeadersRepository
 import com.cloudtracebucket.storageapi.hibernate.repository.FileMetaRepository
 import com.cloudtracebucket.storageapi.pojo.request.DataCollectorRequest
-import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getDelimiterSetting
 import com.cloudtracebucket.storageapi.utils.CsvUtil.listToString
 import com.cloudtracebucket.storageapi.utils.CsvUtil.replaceHeadersInFile
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
