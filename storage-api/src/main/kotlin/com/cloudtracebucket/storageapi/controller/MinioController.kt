@@ -74,14 +74,14 @@ class MinioController @Autowired constructor(
 
         try {
             val headers = getCsvHeaders(file, fileDetails.delimiter!!)
-            val originalFilename = file.originalFilename ?: file.name
             // needed for creating dynamic table creation
-            fileDetails.originalFilename = originalFilename
+            fileDetails.originalFilename = file.originalFilename ?: file.name
 
-            val formattedFile = fileService.prepareFileForProcessing(file, fileDetails)
+            val formattedFile = fileService.prepareFileForProcessing(file, fileDetails, headers)
             val pathOfFile = Path.of(formattedFile.originalFilename ?: formattedFile.name)
 
             minioService.upload(pathOfFile, formattedFile.inputStream, formattedFile.contentType)
+
             val dataCollectorRequest = fileService.processFile(formattedFile, fileDetails, headers)
 
             val collectedData = restService.postTriggerDataCollector(dataCollectorRequest)

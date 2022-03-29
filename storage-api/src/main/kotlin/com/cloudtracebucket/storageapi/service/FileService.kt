@@ -37,17 +37,15 @@ class FileService @Autowired constructor(
         fileDetails: FileUploadRequest,
         fileHeaders: List<String>,
     ): DataCollectorRequest {
+        val latestInsertTime: String?
+        var dynamicTableName = generateTargetTableName(fileDetails)
         val (_, delimiter) = getDelimiterSetting(fileDetails.delimiter!!)
         val fileUrl = getMinioObjectUrl(formattedFile.originalFilename ?: formattedFile.name)
         val stringifiedHeadersList = listToString(fileHeaders)
-        var existingHeaders = checkIfHeadersExist(stringifiedHeadersList)
-        val latestInsertTime: String?
-        val dynamicTableName: String?
+        var existingHeaders = checkIfHeadersExist(dynamicTableName)
 
         when (existingHeaders) {
             null -> {
-                dynamicTableName = generateTargetTableName(fileDetails)
-
                 existingHeaders = existingHeadersFactory.createHeadersEntity(
                     fileDetails,
                     stringifiedHeadersList,
@@ -62,6 +60,19 @@ class FileService @Autowired constructor(
                 headersRepository.save(existingHeaders)
             }
             else -> {
+                val incomingHeadersValid = checkIfIncomingHeadersAreValid(
+                    stringifiedHeadersList,
+                    existingHeaders.headersListAsString!!
+                )
+
+                if (!incomingHeadersValid) {
+                    throw FileServiceException(
+                        "Table for provider ${fileDetails.provider} with trace type ${fileDetails.traceType} already exists, but headers in file differs from headers in the system",
+                        existingHeaders.headersListAsString!!,
+                        stringifiedHeadersList
+                    )
+                }
+
                 dynamicTableName = existingHeaders.dynamicTableName!!
 
                 with(dynamicTableRepository) {
@@ -88,13 +99,13 @@ class FileService @Autowired constructor(
     fun prepareFileForProcessing(
         multipartFile: MultipartFile,
         fileDetails: FileUploadRequest,
+        fileHeaders: List<String>,
     ): MultipartFile {
-        val fileHeaders = getCsvHeaders(multipartFile, fileDetails.delimiter!!)
-        val headersListAsString = listToString(fileHeaders, fileDetails.delimiter)
-
         if (fileHeaders.isEmpty()) {
             throw FileServiceException("File ${multipartFile.originalFilename} does not contain headers on the first row")
         }
+
+        val headersListAsString = listToString(fileHeaders, fileDetails.delimiter)
 
         return try {
             replaceHeadersInFile(multipartFile, headersListAsString)
@@ -107,7 +118,7 @@ class FileService @Autowired constructor(
     }
 
     private fun checkIfHeadersExist(headers: String): ExistingHeaders? {
-        return headersRepository.findFirstByHeaders(headers)
+        return headersRepository.findFirstByDynamicTableName(headers)
     }
 
     private fun getMinioObjectUrl(filename: String): String {
@@ -120,5 +131,9 @@ class FileService @Autowired constructor(
             .replace("\\s+".toRegex(), "_")
 
         return "${formattedProvider}_${fileDetails.traceType}".lowercase()
+    }
+
+    private fun checkIfIncomingHeadersAreValid(expectedHeaders: String, actualHeaders: String): Boolean {
+        return actualHeaders.equals(expectedHeaders, ignoreCase = true)
     }
 }

@@ -17,10 +17,15 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun fileAlreadyExistsException(e: FileServiceException): ResponseEntity<ErrorDetails> {
         val badRequest = HttpStatus.BAD_REQUEST
+        val formattedExpectedHeaders = formatStringifiedList(e.expectedHeaders)
+        val formattedActualHeaders = formatStringifiedList(e.actualHeaders)
+
         val errorDetails = ErrorDetails(
             badRequest.value(),
             e.message ?: e.localizedMessage,
-            LocalDateTime.now()
+            LocalDateTime.now(),
+            formattedExpectedHeaders,
+            formattedActualHeaders,
         )
 
         return ResponseEntity(errorDetails, badRequest)
@@ -37,5 +42,11 @@ class GlobalExceptionHandler {
         )
 
         return ResponseEntity(errorDetails, badRequest)
+    }
+
+    private fun formatStringifiedList(listAsString: String?): List<String>? {
+        return listAsString?.split(",")
+            ?.toList()
+            ?.filter { !it.contains("col_", ignoreCase = true) }
     }
 }
