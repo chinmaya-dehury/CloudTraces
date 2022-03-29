@@ -14,7 +14,7 @@ CREATE TABLE "existing_headers"
     id                 SERIAL PRIMARY KEY NOT NULL,
     provider           VARCHAR(255),
     file_headers       VARCHAR            NOT NULL,
-    dynamic_table_name VARCHAR(255),
+    dynamic_table_name VARCHAR(255) UNIQUE,
     trace_type         trace_types        NOT NULL,
     target_table_name  VARCHAR(255),
     create_time        TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,

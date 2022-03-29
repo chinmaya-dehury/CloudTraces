@@ -5,8 +5,9 @@ const { generalisedTables } = require('../constants/constants');
 const { ColumnPointers, findColumnPointersByExistingHeaderId } = require("../repository/columnPointersRepository");
 const { castColumnsData } = require('../helpers/columnDataCastHelper');
 const { insertIntoGeneralisedTable } = require('../repository/generalisedTableRepository');
+const { insertDataCollectionResults } = require('../repository/dataCollectorRepository');
 
-const processDataCollection = async ({ existingHeadersId, insertTime }) => {
+const processDataCollection = async ({ uuid, existingHeadersId, insertTime }) => {
     const result = {
         insertedRows: 0,
         errors: [],
@@ -14,22 +15,15 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     };
 
     const existingHeaders = await findExistingHeadersById(existingHeadersId);
-
     if (!existingHeaders.length) {
         result.errors.push(`Existing headers with id ${existingHeadersId} not found`);
         return result;
     }
 
     const existingHeader = existingHeaders[0];
-
-    const formattedInsertTime = new Date(insertTime)
-        .toISOString()
-        .replace('T', ' ')
-        .replace('Z', '');
-
     const lastInserted = await findLatestInsertedRows(
         existingHeader.dynamic_table_name,
-        formattedInsertTime
+        insertTime
     );
 
     if (!lastInserted.length) {
@@ -38,6 +32,11 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
     }
 
     const similarColumns = await findSimilarColumns(existingHeader, existingHeadersId);
+
+    if (!Array.isArray(similarColumns) && typeof similarColumns === "object" && similarColumns.error) {
+        result.errors.push(similarColumns.error);
+        return result;
+    }
 
     if (!similarColumns.length) {
         result.errors.push('No similar columns found');
@@ -53,6 +52,8 @@ const processDataCollection = async ({ existingHeadersId, insertTime }) => {
 
     result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader);
 
+    await insertDataCollectionResults(uuid, existingHeadersId, result.insertedRows)
+
     return result;
 }
 
@@ -62,6 +63,13 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
     if (columnPointers === null || !columnPointers.length) {
         const dynamicTblColumns = file_headers.split(',');
         const generalisedTblColumns = getGeneralisedTblColumns(target_table_name);
+
+        if (!generalisedTblColumns) {
+            return {
+                error: `No column data present for header ID: ${existingHeaderId}`
+            }
+        }
+
         const similarColumns = getSimilarColumns(generalisedTblColumns, dynamicTblColumns);
 
         if (similarColumns && !similarColumns.length || (generalisedTblColumns.length !== similarColumns.length)) {
@@ -82,7 +90,7 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
 };
 
 const getGeneralisedTblColumns = (targetTbl) => {
-    return generalisedTables[targetTbl].columnsData.map(colData => colData.column);
+    return generalisedTables[targetTbl]?.columnsData.map(colData => colData.column);
 };
 
 module.exports = {

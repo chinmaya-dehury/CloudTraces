@@ -13,11 +13,11 @@ flyway {
     val dbPort = System.getenv("DB_PORT")
     val dbName = System.getenv("POSTGRES_DB")
     val dbUser = System.getenv("POSTGRES_USERNAME")
-    val dbPwd = System.getenv("POSTGRES_PWD")
+    val dbPswd = System.getenv("POSTGRES_PASSWORD")
 
     url = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
     user = dbUser
-    password = dbPwd
+    password = dbPswd
 }
 
 group = "com.cloudTraceBucket"
