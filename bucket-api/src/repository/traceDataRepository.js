@@ -1,10 +1,19 @@
 const db = require('../db');
-const { buildForServerlessPlatform } = require('../factory/traceDataQueryBuilder');
+const { buildForServerlessPlatform, buildForCloudStorage } = require('../factory/traceDataQueryBuilder');
 
-const findServerlessPlatformData = async (req) => {
-    const provider = req.query.provider;
-    const memoryMb = req.query.memoryMb;
+const findServerlessPlatformData = async ({ provider, memoryMb }) => {
     const sqlQuery = buildForServerlessPlatform(provider, memoryMb);
+
+    try {
+        const { rows } = await db.query(sqlQuery);
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+};
+
+const findCloudStorage = async ({ provider, blobType, blobBytes, read, write }) => {
+    const sqlQuery = buildForCloudStorage(provider, blobType, blobBytes, read, write);
 
     try {
         const { rows } = await db.query(sqlQuery);
@@ -16,4 +25,5 @@ const findServerlessPlatformData = async (req) => {
 
 module.exports = {
     findServerlessPlatformData,
+    findCloudStorage,
 };

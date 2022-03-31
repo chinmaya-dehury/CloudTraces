@@ -1,4 +1,4 @@
-const { findServerlessPlatformData } = require('../repository/traceDataRepository');
+const { findServerlessPlatformData, findCloudStorage } = require('../repository/traceDataRepository');
 const findTraceData = async (req) => {
     const result = {
         rows: [],
@@ -18,16 +18,12 @@ const findTraceData = async (req) => {
     return result;
 };
 
-const getServerlessPlatformData = async (req) => {
-    return await findServerlessPlatformData(req);
-};
-
 const getTblNameFromTraceType = async (traceType, req) => {
     switch (traceType) {
         case 'serverless_platform':
-            return await getServerlessPlatformData(req);
+            return await findServerlessPlatformData(req.query);
         case 'cloud_storage':
-            return 'cloud_storage';
+            return await findCloudStorage(req.query);
         case 'cloud_cluster':
             return 'cloud_cluster';
         default:
