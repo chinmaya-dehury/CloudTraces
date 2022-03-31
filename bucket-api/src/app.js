@@ -2,6 +2,7 @@ const express = require('express');
 const basicAuth = require('express-basic-auth');
 const api = require('./api/controllers');
 const morgan = require('morgan');
+const { validateTraceDataQuery } = require('./validator/TraceDataQueryValidator');
 const app = express();
 const port = 6003;
 const errorHandler = fn => (req, res, next) => {
@@ -31,6 +32,8 @@ app.use(basicAuth({
 
 
 app.get('/status', errorHandler(api.getStatus));
+app.get('/trace-data', validateTraceDataQuery, errorHandler(api.getTraceData));
+
 app.listen(port, () => {
     console.log(`App is running on port ${port}`);
 });
