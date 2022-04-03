@@ -30,6 +30,7 @@ CREATE TABLE "cloud_cluster"
     plan_cpu    INT,
     plan_disk   BIGINT,
     event_type  VARCHAR(255),
+    provider    VARCHAR(255),
     create_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     delete_time TIMESTAMP                   DEFAULT NULL
@@ -42,6 +43,7 @@ CREATE INDEX cloud_storage_provider_index ON "cloud_storage" (provider);
 CREATE INDEX blob_type_uindex ON "cloud_storage" (blob_type);
 
 CREATE INDEX event_type_index ON "cloud_cluster" (event_type);
+CREATE INDEX cloud_cluster_provider_index ON "cloud_cluster" (provider);
 
 CREATE TRIGGER serverless_platform_trigger
     BEFORE UPDATE
