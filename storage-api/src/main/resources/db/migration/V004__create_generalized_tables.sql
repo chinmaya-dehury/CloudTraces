@@ -1,14 +1,14 @@
 CREATE TABLE "serverless_platform"
 (
-    id            SERIAL PRIMARY KEY NOT NULL,
-    function_name VARCHAR(255),
-    count         BIGINT,
-    memory_mb     BIGINT,
-    time          VARCHAR(255),
-    provider      VARCHAR(255),
-    create_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    delete_time   TIMESTAMP                   DEFAULT NULL
+    id                  SERIAL PRIMARY KEY NOT NULL,
+    function_name       VARCHAR(255),
+    count               BIGINT,
+    allocated_memory_mb BIGINT,
+    time                VARCHAR(255),
+    provider            VARCHAR(255),
+    create_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delete_time         TIMESTAMP                   DEFAULT NULL
 );
 
 CREATE TABLE "cloud_storage"

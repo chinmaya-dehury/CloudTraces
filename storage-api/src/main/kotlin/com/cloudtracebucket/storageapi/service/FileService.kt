@@ -41,7 +41,7 @@ class FileService @Autowired constructor(
         val (_, delimiter) = getDelimiterSetting(fileDetails.delimiter!!)
         val fileUrl = getMinioObjectUrl(formattedFile.originalFilename ?: formattedFile.name)
         val stringifiedHeadersList = listToString(fileHeaders)
-        var existingHeaders = checkIfHeadersExist(dynamicTableName)
+        var existingHeaders = checkIfHeadersExist(dynamicTableName, stringifiedHeadersList)
 
         when (existingHeaders) {
             null -> {
@@ -64,11 +64,19 @@ class FileService @Autowired constructor(
                     existingHeaders.headersListAsString!!
                 )
 
+                val incomingDynTblNameValid = checkIfDynTblIsValid(existingHeaders.dynamicTableName!!, dynamicTableName)
+
                 if (!incomingHeadersValid) {
                     throw FileServiceException(
                         "Table for provider ${fileDetails.provider} with trace type ${fileDetails.traceType} already exists, but headers in file differs from headers in the system",
                         existingHeaders.headersListAsString!!,
                         stringifiedHeadersList
+                    )
+                }
+
+                if (!incomingDynTblNameValid) {
+                    throw FileServiceException(
+                        "A table with the same headers exist for a provider '${existingHeaders.provider}'"
                     )
                 }
 
@@ -116,8 +124,8 @@ class FileService @Autowired constructor(
         }
     }
 
-    private fun checkIfHeadersExist(headers: String): ExistingHeaders? {
-        return headersRepository.findFirstByDynamicTableName(headers)
+    private fun checkIfHeadersExist(dynTblName: String, headers: String): ExistingHeaders? {
+        return headersRepository.findFirstByDynamicTableName(dynTblName, headers)
     }
 
     private fun getMinioObjectUrl(filename: String): String {
@@ -134,5 +142,9 @@ class FileService @Autowired constructor(
 
     private fun checkIfIncomingHeadersAreValid(expectedHeaders: String, actualHeaders: String): Boolean {
         return actualHeaders.equals(expectedHeaders, ignoreCase = true)
+    }
+
+    private fun checkIfDynTblIsValid(expectedDynTbl: String, actualDynTbl: String): Boolean {
+        return actualDynTbl.equals(expectedDynTbl, ignoreCase = true)
     }
 }

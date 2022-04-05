@@ -11,8 +11,12 @@ interface ExistingHeadersRepository : CrudRepository<ExistingHeaders, Long> {
 
     @Query(nativeQuery = true, value = """
         SELECT * FROM existing_headers 
-        WHERE dynamic_table_name = :dynamic_tbl_name
+        WHERE dynamic_table_name = :dynamic_tbl_name 
+        OR file_headers = :headers
         AND delete_time IS NULL
     """)
-    fun findFirstByDynamicTableName(@Param("dynamic_tbl_name") dynamicTableName: String): ExistingHeaders?
+    fun findFirstByDynamicTableName(
+        @Param("dynamic_tbl_name") dynamicTableName: String,
+        @Param("headers") headers: String,
+    ): ExistingHeaders?
 }
