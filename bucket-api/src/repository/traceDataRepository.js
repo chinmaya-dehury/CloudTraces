@@ -1,8 +1,8 @@
 const db = require('../db');
 const { buildForServerlessPlatform, buildForCloudStorage, buildForCloudCluster} = require('../factory/traceDataQueryBuilder');
 
-const findServerlessPlatformData = async ({ provider, memoryMb }) => {
-    const sqlQuery = buildForServerlessPlatform(provider, memoryMb);
+const findServerlessPlatformData = async ({ provider, allocatedMb }) => {
+    const sqlQuery = buildForServerlessPlatform(provider, allocatedMb);
 
     try {
         const { rows } = await db.query(sqlQuery);

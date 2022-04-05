@@ -1,18 +1,18 @@
-const buildForServerlessPlatform = (provider, memoryMb) => {
+const buildForServerlessPlatform = (provider, allocatedMb) => {
     let res = '';
 
-    if (provider && (memoryMb && !isNaN(memoryMb))) {
+    if (provider && (allocatedMb && !isNaN(allocatedMb))) {
         return `SELECT * from serverless_platform WHERE
                 provider='${provider}' AND
-                memory_mb=${memoryMb} AND delete_time IS NULL`;
+                allocated_memory_mb=${allocatedMb} AND delete_time IS NULL`;
     }
 
     if (provider) {
         res += 'provider=' + '\'' + provider + '\'' + ' AND ';
     }
 
-    if (memoryMb && !isNaN(memoryMb)) {
-        res += 'memory_mb=' + memoryMb + ' AND ';
+    if (allocatedMb && !isNaN(allocatedMb)) {
+        res += 'allocated_memory_mb=' + allocatedMb + ' AND ';
     }
 
     return 'SELECT * FROM serverless_platform WHERE ' + res + ' delete_time IS NULL';
