@@ -64,7 +64,7 @@ class FileService @Autowired constructor(
                     existingHeaders.headersListAsString!!
                 )
 
-                val incomingDynTblNameValid = checkIfDynTblIsValid(existingHeaders.dynamicTableName!!, dynamicTableName)
+                val incomingDynTblNameValid = checkIfDynTblNameIsValid(existingHeaders.dynamicTableName!!, dynamicTableName)
 
                 if (!incomingHeadersValid) {
                     throw FileServiceException(
@@ -144,7 +144,7 @@ class FileService @Autowired constructor(
         return actualHeaders.equals(expectedHeaders, ignoreCase = true)
     }
 
-    private fun checkIfDynTblIsValid(expectedDynTbl: String, actualDynTbl: String): Boolean {
+    private fun checkIfDynTblNameIsValid(expectedDynTbl: String, actualDynTbl: String): Boolean {
         return actualDynTbl.equals(expectedDynTbl, ignoreCase = true)
     }
 }
