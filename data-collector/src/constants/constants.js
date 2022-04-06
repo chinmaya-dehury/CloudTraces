@@ -10,7 +10,7 @@ const generalisedTables = {
                 datatype: 'number'
             },
             {
-                column: 'memory_mb',
+                column: 'allocated_memory_mb',
                 datatype: 'number'
             },
             {

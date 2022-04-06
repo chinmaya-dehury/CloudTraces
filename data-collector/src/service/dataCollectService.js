@@ -52,7 +52,7 @@ const processDataCollection = async ({ uuid, existingHeadersId, insertTime }) =>
 
     result.insertedRows = await insertIntoGeneralisedTable(castedData, existingHeader);
 
-    await insertDataCollectionResults(uuid, existingHeadersId, result.insertedRows)
+    await insertDataCollectionResults(uuid, existingHeadersId, result.insertedRows);
 
     return result;
 }

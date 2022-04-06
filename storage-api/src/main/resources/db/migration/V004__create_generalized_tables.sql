@@ -1,14 +1,14 @@
 CREATE TABLE "serverless_platform"
 (
-    id            SERIAL PRIMARY KEY NOT NULL,
-    function_name VARCHAR(255),
-    count         BIGINT,
-    memory_mb     BIGINT,
-    time          VARCHAR(255),
-    provider      VARCHAR(255),
-    create_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_time   TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    delete_time   TIMESTAMP                   DEFAULT NULL
+    id                  SERIAL PRIMARY KEY NOT NULL,
+    function_name       VARCHAR(255),
+    count               BIGINT,
+    allocated_memory_mb BIGINT,
+    time                VARCHAR(255),
+    provider            VARCHAR(255),
+    create_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time         TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delete_time         TIMESTAMP                   DEFAULT NULL
 );
 
 CREATE TABLE "cloud_storage"
@@ -30,6 +30,7 @@ CREATE TABLE "cloud_cluster"
     plan_cpu    INT,
     plan_disk   BIGINT,
     event_type  VARCHAR(255),
+    provider    VARCHAR(255),
     create_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     delete_time TIMESTAMP                   DEFAULT NULL
@@ -42,6 +43,7 @@ CREATE INDEX cloud_storage_provider_index ON "cloud_storage" (provider);
 CREATE INDEX blob_type_uindex ON "cloud_storage" (blob_type);
 
 CREATE INDEX event_type_index ON "cloud_cluster" (event_type);
+CREATE INDEX cloud_cluster_provider_index ON "cloud_cluster" (provider);
 
 CREATE TRIGGER serverless_platform_trigger
     BEFORE UPDATE
