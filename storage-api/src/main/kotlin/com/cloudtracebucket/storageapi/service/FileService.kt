@@ -76,7 +76,7 @@ class FileService @Autowired constructor(
 
                 if (!incomingDynTblNameValid) {
                     throw FileServiceException(
-                        "A table with the same headers exist for a provider '${existingHeaders.provider}'"
+                        "A table with the same headers already exist for a provider '${existingHeaders.provider}'"
                     )
                 }
 
