@@ -5,3 +5,5 @@ const app = createApp(App);
 app.mount('#app');
 
 import 'bootstrap/scss/bootstrap.scss';
+import "bootstrap";
+import "bootstrap/dist/js/bootstrap.js";
