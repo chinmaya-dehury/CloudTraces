@@ -12,10 +12,10 @@
                 <b-collapse id="nav-collapse" is-nav>
                   <b-navbar-nav class="ml-auto">
                     <b-nav-item-dropdown text="Files">
-                      <b-dropdown-item href="#">Upload Trace Files</b-dropdown-item>
+                      <b-dropdown-item :to="{ name: 'TraceFileUpload' }">Upload Trace Files</b-dropdown-item>
                       <b-dropdown-item href="#">Download Trace Files</b-dropdown-item>
                     </b-nav-item-dropdown>
-                    <b-nav-item href="#">Home</b-nav-item>
+                    <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
                     <b-nav-item href="#">About</b-nav-item>
                   </b-navbar-nav>
                 </b-collapse>

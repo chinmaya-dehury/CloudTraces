@@ -6,7 +6,8 @@
 
 <script>
 
-import NavBar from "@/components/Navbar";
+import NavBar from '@/components/Navbar';
+
 export default {
   name: 'App',
   components: {
@@ -16,7 +17,9 @@ export default {
 </script>
 
 <style>
+
 #app {
   width: 100%;
 }
+
 </style>
