@@ -5,7 +5,7 @@
           <b-row class="text-center">
             <b-col></b-col>
             <b-col cols="10" class="d-flex w-100 justify-content-between">
-              <b-navbar-brand href="#">CTB</b-navbar-brand>
+              <b-navbar-brand :to="{ name: 'Home' }">CTB</b-navbar-brand>
               <b-navbar-toggle class="toggle-btn" target="nav-collapse"></b-navbar-toggle>
 
               <div class="collapsed-navbar-el">
