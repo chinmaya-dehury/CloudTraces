@@ -79,15 +79,17 @@
         <b-col/>
       </b-row>
     </b-container>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import NavBar from '@/components/Navbar.vue';
+import Footer from '@/components/Footer';
 
 export default {
   name: 'UploadFile',
-  components: { NavBar },
+  components: { NavBar, Footer },
   data() {
     return {
       form: {
