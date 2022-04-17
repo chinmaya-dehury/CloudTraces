@@ -115,8 +115,9 @@
 </template>
 
 <script>
-import NavBar from '@/components/Navbar.vue';
+import NavBar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { uploadTraceFile } from '@/client/storageApi';
 
 export default {
   name: 'UploadFile',
@@ -153,8 +154,11 @@ export default {
     }
   },
   methods: {
-    onSubmit(event) {
+    async onSubmit(event) {
       event.preventDefault();
+
+      const response = await uploadTraceFile(this.form);
+      console.log(response);
     },
   }
 }
