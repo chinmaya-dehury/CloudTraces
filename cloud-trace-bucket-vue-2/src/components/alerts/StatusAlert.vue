@@ -1,12 +1,13 @@
 <template>
   <div>
     <b-alert
-        :show="showAlert ? 15 : 0"
+        fade
+        :show="dismissCountDown"
         :variant="getAlertVariant()"
         @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged"
     >
-      <p> {{ message }} </p>
+      <p> {{ message || internalServerErrorMsg }} </p>
       <b-progress
           :variant="getAlertVariant()"
           :max="dismissSecs"
@@ -24,6 +25,7 @@ export default {
     return {
       dismissSecs: 10,
       dismissCountDown: 0,
+      internalServerErrorMsg: 'Internal Server Error. Please try later or contact a system administrator.',
     }
   },
   props: {
@@ -35,7 +37,6 @@ export default {
       type: String,
       default: null,
     },
-    showAlert: Boolean,
   },
   methods: {
     countDownChanged(dismissCountDown) {
@@ -46,11 +47,18 @@ export default {
         return 'success';
       }
 
-      if (this.responseStatus > 200) {
+      if (this.responseStatus > 200 && this.responseStatus < 500) {
+        return 'warning';
+      }
+
+      if (this.responseStatus >= 500) {
         return 'danger';
       }
 
       return 'primary';
+    },
+    triggerAlert() {
+      this.dismissCountDown = this.dismissSecs;
     },
   }
 }

@@ -6,9 +6,9 @@
         <b-col/>
         <b-col cols="10" class="upload-form-col">
           <StatusAlert
+              ref="statusResponseAlert"
               :message="apiResponse.message"
               :response-status="apiResponse.status"
-              :show-alert="showResponseAlert"
           />
           <h1>Upload Trace File</h1>
           <p>Provide CSV trace file to be processed</p>
@@ -153,7 +153,6 @@ export default {
         message: null,
         status: null,
       },
-      showResponseAlert: false,
       form: {
         provider: '',
         traceType: null,
@@ -192,7 +191,8 @@ export default {
 
       if (this.apiResponse) {
         this.isBusyUploading = false;
-        this.showResponseAlert = true;
+        this.$refs.statusResponseAlert.triggerAlert();
+        this.clearForm();
       }
 
       await this.$nextTick();
@@ -205,6 +205,13 @@ export default {
     isFormFilled(form) {
       return form.provider && form.traceType && form.delimiter && form.file;
     },
+
+    clearForm() {
+      this.form.provider = '';
+      this.form.traceType = null;
+      this.form.delimiter = null;
+      this.form.file = null;
+    }
   }
 }
 
