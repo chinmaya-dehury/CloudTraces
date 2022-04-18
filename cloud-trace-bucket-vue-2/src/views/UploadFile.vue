@@ -78,14 +78,26 @@
                     plain
                 />
               </b-form-group>
-              <b-button
-                  :disabled="!isFormFilled(this.form)"
-                  @click="showResponseAlert = true"
-                  type="submit"
-                  variant="primary"
-                  class="my-4"
+
+              <b-overlay
+                  :show="isBusyUploading"
+                  rounded
+                  opacity="0.6"
+                  spinner-small
+                  spinner-variant="primary"
+                  class="d-inline-block"
+                  @hidden="onHidden"
               >
-                Upload</b-button>
+                <b-button
+                    ref="button"
+                    :disabled="!isFormFilled(this.form)"
+                    type="submit"
+                    variant="primary"
+                    class="my-4"
+                >
+                  Upload
+                </b-button>
+              </b-overlay>
             </b-form>
 
             <!-- Form tooltips -->
@@ -163,6 +175,7 @@ export default {
         'PIPE_SEPARATED',
         'SPACE_SEPARATED'
       ],
+      isBusyUploading: false,
     }
   },
   computed: {
@@ -174,9 +187,21 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
 
+      this.isBusyUploading = true;
       this.apiResponse = await uploadTraceFile(this.form);
+
+      if (this.apiResponse) {
+        this.isBusyUploading = false;
+        this.showResponseAlert = true;
+      }
+
       await this.$nextTick();
     },
+
+    onHidden() {
+      this.$refs.button.focus();
+    },
+
     isFormFilled(form) {
       return form.provider && form.traceType && form.delimiter && form.file;
     },
