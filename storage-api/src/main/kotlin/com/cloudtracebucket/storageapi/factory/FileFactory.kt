@@ -28,6 +28,8 @@ class FileFactory {
         it.fileName = file.originalFilename ?: file.name
         it.errors = errors
         it.dataCollected = dataCollected
+        it.message = "File ${file.originalFilename} uploaded successfully"
+        it.status = 200
     }
 
     fun createFileMetaEntity(
