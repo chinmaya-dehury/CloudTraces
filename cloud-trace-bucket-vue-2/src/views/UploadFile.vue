@@ -78,7 +78,14 @@
                     plain
                 />
               </b-form-group>
-              <b-button @click="showResponseAlert=true" type="submit" variant="primary" class="my-4">Upload</b-button>
+              <b-button
+                  :disabled="!isFormFilled(this.form)"
+                  @click="showResponseAlert = true"
+                  type="submit"
+                  variant="primary"
+                  class="my-4"
+              >
+                Upload</b-button>
             </b-form>
 
             <!-- Form tooltips -->
@@ -161,7 +168,7 @@ export default {
   computed: {
     providerState() {
       return this.form.provider.length > 2 && this.form.provider.length <= 20;
-    }
+    },
   },
   methods: {
     async onSubmit(event) {
@@ -169,6 +176,9 @@ export default {
 
       this.apiResponse = await uploadTraceFile(this.form);
       await this.$nextTick();
+    },
+    isFormFilled(form) {
+      return form.provider && form.traceType && form.delimiter && form.file;
     },
   }
 }
