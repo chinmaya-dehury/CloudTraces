@@ -5,10 +5,15 @@
       <b-row class="text-center">
         <b-col/>
         <b-col cols="10" class="upload-form-col">
+          <StatusAlert
+              :message="apiResponse.message"
+              :response-status="apiResponse.status"
+              :show-alert="showResponseAlert"
+          />
           <h1>Upload Trace File</h1>
           <p>Provide CSV trace file to be processed</p>
           <div id="upload-form">
-            <b-form @submit="onSubmit" v-if="show" class="form-check-inline">
+            <b-form @submit="onSubmit" class="form-check-inline">
               <b-form-group
                   id="input-group-1"
                   label="Provider"
@@ -73,7 +78,7 @@
                     plain
                 />
               </b-form-group>
-              <b-button type="submit" variant="primary" class="my-4">Upload</b-button>
+              <b-button @click="showResponseAlert=true" type="submit" variant="primary" class="my-4">Upload</b-button>
             </b-form>
 
             <!-- Form tooltips -->
@@ -117,13 +122,19 @@
 <script>
 import NavBar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import StatusAlert from '@/components/alerts/StatusAlert';
 import { uploadTraceFile } from '@/client/storageApi';
 
 export default {
   name: 'UploadFile',
-  components: { NavBar, Footer },
+  components: { StatusAlert, NavBar, Footer },
   data() {
     return {
+      apiResponse: {
+        message: null,
+        status: null,
+      },
+      showResponseAlert: false,
       form: {
         provider: '',
         traceType: null,
@@ -145,7 +156,6 @@ export default {
         'PIPE_SEPARATED',
         'SPACE_SEPARATED'
       ],
-      show: true
     }
   },
   computed: {
@@ -157,8 +167,8 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
 
-      const response = await uploadTraceFile(this.form);
-      console.log(response);
+      this.apiResponse = await uploadTraceFile(this.form);
+      await this.$nextTick();
     },
   }
 }

@@ -5,7 +5,6 @@ const storageApiUrl = getStorageApiUrl();
 
 export async function uploadTraceFile(form) {
     const formData = new FormData();
-    const errors = [];
     let result;
 
     const {provider, traceType, delimiter, file} = form;
@@ -20,12 +19,8 @@ export async function uploadTraceFile(form) {
             result = res.data;
         })
         .catch(e => {
-            errors.push(e);
+            result = e.response.data;
         });
-
-    if (errors.length) {
-        return errors;
-    }
 
     return result;
 }
