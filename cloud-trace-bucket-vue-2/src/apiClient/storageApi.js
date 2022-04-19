@@ -1,5 +1,5 @@
-import axios from "axios";
-import { getStorageApiUrl } from "@/config";
+import axios from 'axios';
+import { getStorageApiUrl } from '@/config';
 
 const storageApiUrl = getStorageApiUrl();
 
@@ -7,7 +7,7 @@ export async function uploadTraceFile(form) {
     const formData = new FormData();
     let result;
 
-    const {provider, traceType, delimiter, file} = form;
+    const { provider, traceType, delimiter, file } = form;
 
     formData.append('provider', provider);
     formData.append('traceType', traceType);
@@ -23,4 +23,18 @@ export async function uploadTraceFile(form) {
         });
 
     return result;
+}
+
+export async function getAllTraceFiles() {
+    let response;
+
+    await axios.get(`${storageApiUrl}/files`)
+        .then(res => {
+            response = res.data;
+        })
+        .catch(err => {
+            response = err.response.data;
+        });
+
+    return response;
 }

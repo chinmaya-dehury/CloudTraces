@@ -142,7 +142,7 @@
 import NavBar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import StatusAlert from '@/components/alerts/StatusAlert';
-import { uploadTraceFile } from '@/client/storageApi';
+import { uploadTraceFile } from '@/apiClient/storageApi';
 
 export default {
   name: 'UploadFile',
