@@ -15,4 +15,10 @@ interface FileMetaRepository : CrudRepository<FileMeta, Long> {
         LIMIT 1;
     """)
     fun findFirstByFileName(@Param("file_name") filename: String): FileMeta?
+
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM file_meta 
+        WHERE delete_time IS NULL
+    """)
+    fun findAllFiles(): List<FileMeta>?
 }
