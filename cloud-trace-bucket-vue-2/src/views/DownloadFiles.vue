@@ -11,9 +11,9 @@
           </div>
         </b-col>
         <b-col/>
-        <Footer/>
       </b-row>
     </b-container>
+    <Footer/>
   </div>
 </template>
 
