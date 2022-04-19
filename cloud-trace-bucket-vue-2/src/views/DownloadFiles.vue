@@ -41,7 +41,7 @@ export default {
     return {
       fields: [
         { key: 'fileName', sortable: true },
-        { key: 'fileFormat', sortable: true },
+        { key: 'fileFormat', sortable: false },
         { key: 'provider', sortable: true },
         { key: 'fileSize', sortable: true },
         { key: 'uploadTime', sortable: true }
