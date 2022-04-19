@@ -11,7 +11,7 @@
               :response-status="apiResponse.status"
           />
           <h1>Upload Trace File</h1>
-          <p>Provide CSV trace file to be processed</p>
+          <p class="mb-5">Provide CSV trace file to be processed</p>
           <div id="upload-form">
             <b-form @submit="onSubmit" class="form-check-inline">
               <b-form-group
@@ -220,5 +220,10 @@ export default {
 <style scoped>
   p {
     color: #6c757d;
+  }
+  #upload-form {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
   }
 </style>

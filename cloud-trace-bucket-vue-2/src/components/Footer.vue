@@ -1,6 +1,8 @@
 <template>
-  <div class="container-fluid text-center bg-light p-5 fixed-bottom">
-    <p>Footer</p>
+  <div id="footer" class="container-fluid text-center bg-light p-5 ">
+    <div id="footer-content">
+      <p>Footer</p>
+    </div>
   </div>
 </template>
 
@@ -12,5 +14,12 @@ export default {
 </script>
 
 <style scoped>
+body, #footer {  /* Will not work on IE if body is ommitted */
+  display: flex;
+  flex-direction: column;
+}
 
+#footer-content {
+  flex-grow: 1;
+}
 </style>
