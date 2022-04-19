@@ -1,10 +1,10 @@
 <template>
   <div id="upload-trace-file">
     <NavBar/>
-    <b-container class="upload-file-container mt-5">
-      <b-row class="text-center">
+    <b-container class="mt-5">
+      <b-row>
         <b-col/>
-        <b-col cols="10" class="upload-form-col">
+        <b-col cols="10">
           <StatusAlert
               ref="statusResponseAlert"
               :message="apiResponse.message"
@@ -218,9 +218,6 @@ export default {
 </script>
 
 <style scoped>
-  .upload-form-col {
-    text-align: left;
-  }
   p {
     color: #6c757d;
   }
