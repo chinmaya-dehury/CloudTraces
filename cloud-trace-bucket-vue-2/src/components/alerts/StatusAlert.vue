@@ -7,7 +7,8 @@
         @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged"
     >
-      <p> {{ message || internalServerErrorMsg }} </p>
+      <p v-if="responseStatus !== 500"> {{ message }} </p>
+      <p v-else>{{ internalServerErrorMsg }}</p>
       <b-progress
           :variant="getAlertVariant()"
           :max="dismissSecs"

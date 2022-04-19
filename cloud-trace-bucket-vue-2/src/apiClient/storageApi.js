@@ -38,3 +38,15 @@ export async function getAllTraceFiles() {
 
     return response;
 }
+
+export async function downloadTraceFile(fileName) {
+    axios.get(`${storageApiUrl}/files/${fileName}`,{ responseType: 'blob' })
+        .then(res => {
+           const url = window.URL.createObjectURL(new Blob([res.data]));
+           const link = document.createElement('a');
+           link.href = url;
+           link.setAttribute('download', fileName);
+           document.body.appendChild(link);
+           link.click();
+        });
+}
