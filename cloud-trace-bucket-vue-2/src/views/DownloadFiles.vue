@@ -8,7 +8,14 @@
           <div id="files-download">
             <h1 class="mb-5">Download Trace Files</h1>
             <div class="file-table" v-if="files.length">
-              <b-table striped hover :items="files"></b-table>
+              <b-table
+                  label-sort-asc=""
+                  label-sort-desc=""
+                  label-sort-clear=""
+                  striped hover
+                  :items="files"
+                  :fields="fields"
+              />
             </div>
             <div v-else>
               <h3 class="d-flex my-5">No files were uploaded yet!</h3>
@@ -32,7 +39,13 @@ export default {
   components: { Footer, NavBar },
   data() {
     return {
-      fields: ['fileName', 'fileFormat', 'provider', 'fileSize', 'uploadTime'],
+      fields: [
+        { key: 'fileName', sortable: true },
+        { key: 'fileFormat', sortable: true },
+        { key: 'provider', sortable: true },
+        { key: 'fileSize', sortable: true },
+        { key: 'uploadTime', sortable: true }
+      ],
       files: [],
     }
   },
