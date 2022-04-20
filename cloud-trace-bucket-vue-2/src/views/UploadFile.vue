@@ -226,7 +226,7 @@ export default {
     color: #6c757d;
   }
   #upload-form {
-    min-height: 74vh;
+    min-height: 73vh;
     display: flex;
     flex-direction: row;
   }
