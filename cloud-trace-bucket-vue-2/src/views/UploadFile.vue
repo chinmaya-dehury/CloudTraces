@@ -11,7 +11,11 @@
               :response-status="apiResponse.status"
           />
           <h1>Upload Trace File</h1>
-          <p>Provide CSV trace file to be processed.</p>
+          <p>
+            Provide CSV trace file to be processed.
+            <br>
+            For more trace type info see <b-link :to="{ name: 'About' }">About</b-link> page.
+          </p>
           <div id="upload-form">
             <b-form @submit="onSubmit" class="form-check-inline">
               <b-form-group
@@ -161,7 +165,7 @@ export default {
       },
       tooltipText: {
         provider: 'Specify trace file provider name (e.g Google)',
-        traceType: "Specify file's trace type (for details see 'About' page)",
+        traceType: "Specify file's trace type",
         delimiter: 'Specify .csv file delimiter',
         file: 'CSV file only'
       },

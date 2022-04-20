@@ -78,9 +78,9 @@ export default {
 </script>
 
 <style scoped>
-#files-download {
-  min-height: 78vh;
-  display: flex;
-  flex-direction: column;
-}
+  #files-download {
+    min-height: 78vh;
+    display: flex;
+    flex-direction: column;
+  }
 </style>

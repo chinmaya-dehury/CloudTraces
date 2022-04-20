@@ -16,7 +16,7 @@
                       <b-dropdown-item :to="{ name: 'DownloadTraceFiles' }">Download Trace Files</b-dropdown-item>
                     </b-nav-item-dropdown>
                     <b-nav-item :to="{ name: 'Home' }">Home</b-nav-item>
-                    <b-nav-item href="#">About</b-nav-item>
+                    <b-nav-item  :to="{ name: 'About' }">About</b-nav-item>
                   </b-navbar-nav>
                 </b-collapse>
               </div>
