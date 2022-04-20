@@ -1,5 +1,5 @@
 <template>
-  <div id="upload-trace-file">
+  <div id="upload-trace-file" class="font-monospace">
     <NavBar/>
     <b-container class="mt-5">
       <b-row>
@@ -11,7 +11,7 @@
               :response-status="apiResponse.status"
           />
           <h1>Upload Trace File</h1>
-          <p class="mb-5">Provide CSV trace file to be processed</p>
+          <p>Provide CSV trace file to be processed.</p>
           <div id="upload-form">
             <b-form @submit="onSubmit" class="form-check-inline">
               <b-form-group
@@ -73,7 +73,7 @@
                     id="input-4"
                     v-model="form.file"
                     accept="text/csv"
-                    class="w-75"
+                    class="w-100"
                     required
                     plain
                 />
@@ -222,7 +222,7 @@ export default {
     color: #6c757d;
   }
   #upload-form {
-    min-height: 100vh;
+    min-height: 74vh;
     display: flex;
     flex-direction: row;
   }

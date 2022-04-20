@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="lg" type="light" variant="warning">
+    <b-navbar toggleable="lg" type="light" variant="warning" class="font-monospace">
       <div id="inner" class="w-100">
         <b-container class="center-content">
           <b-row class="text-center">

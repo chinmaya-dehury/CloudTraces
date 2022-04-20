@@ -1,5 +1,5 @@
 <template>
-  <div id="download-files">
+  <div id="download-files" class="font-monospace">
     <NavBar/>
     <b-container class="mt-5 mb-5">
       <b-row>
@@ -79,7 +79,7 @@ export default {
 
 <style scoped>
 #files-download {
-  min-height: 100vh;
+  min-height: 78vh;
   display: flex;
   flex-direction: column;
 }
