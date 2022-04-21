@@ -7,4 +7,6 @@ class FileUploadResponse {
     var fileName: String? = null
     var errors: List<String>? = listOf()
     var dataCollected: Boolean = false
+    var status: Int? = null
+    var message: String? = null
 }

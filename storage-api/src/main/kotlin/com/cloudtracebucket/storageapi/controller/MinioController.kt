@@ -4,6 +4,7 @@ import com.cloudtracebucket.storageapi.controller.request.FileUploadRequest
 import com.cloudtracebucket.storageapi.controller.response.FileInfoResponse
 import com.cloudtracebucket.storageapi.controller.response.FileUploadResponse
 import com.cloudtracebucket.storageapi.factory.FileFactory
+import com.cloudtracebucket.storageapi.hibernate.repository.FileMetaRepository
 import com.cloudtracebucket.storageapi.service.FileService
 import com.cloudtracebucket.storageapi.service.RestService
 import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
@@ -18,6 +19,7 @@ import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,20 +30,23 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/files")
+@CrossOrigin(origins = ["http://localhost:8080"])
 class MinioController @Autowired constructor(
     private val minioService: MinioService,
     private val fileValidator: FileValidator,
     private val fileFactory: FileFactory,
     private val fileService: FileService,
     private val restService: RestService,
+    private val fileMetaRepository: FileMetaRepository
 ) {
 
     @GetMapping
     @Throws(MinioException::class)
     fun getListOfFiles(): ResponseEntity<List<FileInfoResponse>> {
-        val files = fileFactory.createFileListResponse(minioService.list() ?: listOf())
+        val files = fileMetaRepository.findAllFiles() ?: listOf()
+        val response = fileFactory.createFileListResponse(files)
 
-        return ResponseEntity(files, HttpStatus.OK)
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
     @GetMapping("/{fileName}")
