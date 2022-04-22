@@ -30,13 +30,13 @@ export async function getAllTraceFiles() {
 
     await axios.get(`${storageApiUrl}/files`)
         .then(res => {
-            response = res.data;
+            response = res?.data;
         })
         .catch(err => {
-            response = err.response.data;
+            response = err?.response?.data;
         });
 
-    return response;
+    return response ?? [];
 }
 
 export async function downloadTraceFile(fileName) {
