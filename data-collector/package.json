@@ -4,7 +4,8 @@
   "description": "A module for collecting raw data from dynamically created tables and inserting it into generalised schemas",
   "main": "index.js",
   "scripts": {
-    "dev": "source .env && nodemon src/app.js"
+    "dev": "source .env && nodemon src/app.js",
+    "serve": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
