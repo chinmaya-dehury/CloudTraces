@@ -22,6 +22,8 @@ export async function uploadTraceFile(form) {
             result = res.data;
         })
         .catch(e => {
+            console.log(e);
+            console.log(e.response);
             result = e.response.data;
         });
 
