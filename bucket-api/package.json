@@ -4,7 +4,8 @@
   "description": "API for getting generalised trace data",
   "main": "src/app.js",
   "scripts": {
-    "dev": "source .env && nodemon src/app.js"
+    "dev": "source .env && nodemon src/app.js",
+    "serve": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
