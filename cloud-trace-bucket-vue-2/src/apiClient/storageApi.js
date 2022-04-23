@@ -14,6 +14,8 @@ export async function uploadTraceFile(form) {
     formData.append('delimiter', delimiter);
     formData.append('file', file);
 
+    console.log(storageApiUrl);
+
     await axios.post(`${storageApiUrl}/files`, formData)
         .then(res => {
             result = res.data;
