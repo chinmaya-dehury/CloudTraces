@@ -48,6 +48,6 @@ class GlobalExceptionHandler {
         return listAsString?.split(",")
             ?.toList()
             ?.filter { !it.contains("col_", ignoreCase = true) }
-            ?.joinToString(",")
+            ?.joinToString(",", "[", "]")
     }
 }
