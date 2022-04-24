@@ -68,7 +68,7 @@ class FileService @Autowired constructor(
 
                 if (!incomingHeadersValid) {
                     throw FileServiceException(
-                        "Table for provider ${fileDetails.provider} with trace type ${fileDetails.traceType} already exists, but headers in file differs from headers in the system",
+                        "Table for provider ${fileDetails.provider} with trace type ${fileDetails.traceType} already exists, but headers in file differs from headers in the system.",
                         existingHeaders.headersListAsString!!,
                         stringifiedHeadersList
                     )

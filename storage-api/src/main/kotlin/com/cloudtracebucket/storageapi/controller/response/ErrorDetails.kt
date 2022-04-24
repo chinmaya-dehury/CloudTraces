@@ -7,7 +7,5 @@ import java.time.LocalDateTime
 data class ErrorDetails(
     var status: Int,
     var message: String,
-    var timestamp: LocalDateTime,
-    var expectedHeaders: List<String>? = null,
-    var actualHeaders: List<String>? = null,
+    var timestamp: LocalDateTime
 )
