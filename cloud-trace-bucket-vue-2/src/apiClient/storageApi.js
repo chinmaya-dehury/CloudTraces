@@ -14,16 +14,11 @@ export async function uploadTraceFile(form) {
     formData.append('delimiter', delimiter);
     formData.append('file', file);
 
-    console.log(storageApiUrl);
-
     await axios.post(`${storageApiUrl}/files`, formData)
         .then(res => {
-            console.log(res);
             result = res.data;
         })
         .catch(e => {
-            console.log(e);
-            console.log(e.response);
             result = e.response.data;
         });
 
