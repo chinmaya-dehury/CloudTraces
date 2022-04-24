@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/files")
-@CrossOrigin(origins = ["http://172.17.91.248:8082"])
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 class MinioController @Autowired constructor(
     private val minioService: MinioService,
     private val fileValidator: FileValidator,
