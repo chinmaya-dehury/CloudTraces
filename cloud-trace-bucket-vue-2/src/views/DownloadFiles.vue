@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     async downloadFile(fileName) {
-      console.log(fileName);
       await downloadTraceFile(fileName);
     }
   }

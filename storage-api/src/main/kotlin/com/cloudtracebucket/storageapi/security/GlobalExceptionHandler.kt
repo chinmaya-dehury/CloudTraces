@@ -19,13 +19,13 @@ class GlobalExceptionHandler {
         val badRequest = HttpStatus.BAD_REQUEST
         val formattedExpectedHeaders = formatStringifiedList(e.expectedHeaders)
         val formattedActualHeaders = formatStringifiedList(e.actualHeaders)
-
+        val errorMsg = e.message ?: e.localizedMessage
         val errorDetails = ErrorDetails(
             badRequest.value(),
-            e.message ?: e.localizedMessage,
-            LocalDateTime.now(),
-            formattedExpectedHeaders,
-            formattedActualHeaders,
+            errorMsg
+                .plus(" Expected: $formattedExpectedHeaders,")
+                .plus(" actual: $formattedActualHeaders"),
+            LocalDateTime.now()
         )
 
         return ResponseEntity(errorDetails, badRequest)
@@ -44,9 +44,10 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorDetails, badRequest)
     }
 
-    private fun formatStringifiedList(listAsString: String?): List<String>? {
+    private fun formatStringifiedList(listAsString: String?): String? {
         return listAsString?.split(",")
             ?.toList()
             ?.filter { !it.contains("col_", ignoreCase = true) }
+            ?.joinToString(",", "[", "]")
     }
 }
