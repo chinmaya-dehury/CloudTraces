@@ -46,6 +46,22 @@
                   </div>
                 </h5>
               </div>
+              <div class="mb-5">
+                <h3 class="pb-2 fw-bold">Currently supported browsers</h3>
+                <div>
+                  <ul>
+                    <li>
+                      <b><i>Brave (>= Version 1.37.116)</i></b>
+                    </li>
+                    <li class="pt-3">
+                      <b><i>Chrome (>= Version 100.0.4896.127)</i></b>
+                    </li>
+                    <li class="pt-3">
+                      <b><i>Safari (>= Version 15.3)</i></b>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </b-col>
