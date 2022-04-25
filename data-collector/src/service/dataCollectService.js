@@ -90,6 +90,7 @@ const findSimilarColumns = async ({ target_table_name, file_headers }, existingH
 };
 
 const getGeneralisedTblColumns = (targetTbl) => {
+    console.log(generalisedTables[targetTbl]?.columnsData);
     return generalisedTables[targetTbl]?.columnsData.map(colData => colData.column);
 };
 
