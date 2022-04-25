@@ -40,7 +40,7 @@ const generalisedTables = {
         ],
     },
     cloud_cluster: {
-        columns: [
+        columnsData: [
             {
                 column: 'plan_cpu',
                 datatype: 'number'
