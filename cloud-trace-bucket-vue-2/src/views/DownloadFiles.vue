@@ -56,6 +56,7 @@ export default {
         { key: 'fileFormat', sortable: false },
         { key: 'provider', sortable: true },
         { key: 'fileSize', sortable: true },
+        { key: 'traceType', sortable: true },
         { key: 'uploadTime', sortable: true }
       ],
       files: [],

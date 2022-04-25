@@ -17,6 +17,7 @@ class FileFactory {
             it.fileName = file.fileName
             it.fileSize = file.fileSize
             it.fileFormat = file.fileFormat
+            it.traceType = file.existingHeader?.traceType
             it.uploadTime = file.uploadTime
         }
     }
