@@ -16,9 +16,13 @@ export async function uploadTraceFile(form) {
 
     await axios.post(`${storageApiUrl}/files`, formData)
         .then(res => {
+            console.log(res);
+            console.log(res?.data);
             result = res.data;
         })
         .catch(e => {
+            console.log(e?.response);
+            console.log(e?.response?.data);
             result = e.response.data;
         });
 
