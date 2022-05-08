@@ -1,0 +1,126 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Data collector API",
+    "description": "Data Collector is a RESTful service, responsible for collecting cloud trace data from dynamically created tables by Storage API and inserting the data into generalized tables"
+  },
+  "host": "localhost:6002",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": ["Status"],
+        "summary": "Health check of data collector",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/okResponse"
+            }
+          }
+        }
+      }
+    },
+    "/collect-data": {
+      "post": {
+        "tags": ["Collect data"],
+        "summary": "Collect cloud trace data from generalized tables",
+        "parameters": [
+          {
+            "name": "collectDataRequest",
+            "in": "body",
+            "description": "A request to collect data from generalized tables",
+            "schema": {
+              "$ref": "#/definitions/collectDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/collectDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "collectDataRequest": {
+      "required": ["uuid", "existingHeadersId", "insertTime"],
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "uniqueItems": true,
+          "example": "test-uuid",
+          "description": "A unique identifier of the data collecting request"
+        },
+        "existingHeadersId": {
+          "type": "integer",
+          "minimum": 1,
+          "uniqueItems": true,
+          "example": 420,
+          "description": "ID of existing header table holding information generalized and target tables"
+        },
+        "insertTime": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2022-03-25 10:43:49.405926",
+          "description": "Date time when the latest records were inserted into a dynamic table"
+        }
+      }
+    },
+    "okResponse": {
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "collectDataResponse": {
+      "properties": {
+        "insertedRows": {
+          "type": "integer",
+          "example": 69,
+          "description": "A number indicating how many rows were collected and inserted into a generalized table"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime",
+          "example": "2022-03-25 10:43:49.405926",
+          "description": "Date time when the latest records were inserted into a dynamic table"
+        }
+      }
+    },
+    "errorResponse": {
+      "properties": {
+        "errors": {
+          "type": "array",
+          "example": ["No records have been inserted lately"],
+          "description": "An array that includes errors raised while data was being collected"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oneOf": {
+      "type": "basic",
+      "description": "Data Collector uses basic auth for authorization"
+    }
+  }
+}

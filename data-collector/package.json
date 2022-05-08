@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/chinmaya-dehury/CloudTraces#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-basic-auth": "^1.2.1",
@@ -26,6 +27,8 @@
     "morgan": "^1.10.0",
     "pg": "^8.7.3",
     "pg-format": "^1.0.4",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.3.0",
     "upcast": "^4.0.0"
   },
   "devDependencies": {

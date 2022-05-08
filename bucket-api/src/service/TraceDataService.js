@@ -6,7 +6,7 @@ const findTraceData = async (req) => {
         timestamp: new Date().toISOString()
     };
 
-    const traceData = await getTblNameFromTraceType(req.query.traceType, req);
+    const traceData = await getTraceData(req.query.traceType, req);
 
     if (!traceData) {
         result.errors.push(`Trace type '${req.query.traceType}' does not exist`);
@@ -18,7 +18,7 @@ const findTraceData = async (req) => {
     return result;
 };
 
-const getTblNameFromTraceType = async (traceType, req) => {
+const getTraceData = async (traceType, req) => {
     switch (traceType) {
         case 'serverless_platform':
             return await findServerlessPlatformData(req.query);
