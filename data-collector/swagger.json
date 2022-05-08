@@ -11,6 +11,20 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
+    "/status": {
+      "get": {
+        "tags": ["Status"],
+        "summary": "Health check of data collector",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/okResponse"
+            }
+          }
+        }
+      }
+    },
     "/collect-data": {
       "post": {
         "tags": ["Collect data"],
@@ -67,6 +81,14 @@
           "format": "datetime",
           "example": "2022-03-25 10:43:49.405926",
           "description": "Date time when the latest records were inserted into a dynamic table"
+        }
+      }
+    },
+    "okResponse": {
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
         }
       }
     },
