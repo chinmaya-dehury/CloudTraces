@@ -6,6 +6,7 @@
         <b-col cols="10">
           <div id="footer-content" class="d-inline-block">
             <p>Edgar Selihov</p>
+            <p>Chinmaya Kumar Dehury</p>
             <p>2022</p>
             <p class="h4">
               <b-link href="https://github.com/chinmaya-dehury/CloudTraces" target="_blank" active secondary>

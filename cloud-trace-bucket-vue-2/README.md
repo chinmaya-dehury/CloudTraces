@@ -1,4 +1,9 @@
 # cloud-trace-bucket-vue-2
+Front-end for CloudTraceBucket
+
+## Required ENV variables:
+
+`VUE_APP_STORAGE_API=`
 
 ## Project setup
 ```
@@ -19,6 +24,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
