@@ -3,6 +3,7 @@ package com.cloudtracebucket.storageapi.security
 import com.cloudtracebucket.storageapi.controller.response.ErrorDetails
 import com.cloudtracebucket.storageapi.exception.DataCollectorException
 import com.cloudtracebucket.storageapi.exception.FileServiceException
+import com.cloudtracebucket.storageapi.exception.UtilException
 import java.time.LocalDateTime
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -34,6 +35,19 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DataCollectorException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun dataCollectionException(e: DataCollectorException): ResponseEntity<ErrorDetails> {
+        val badRequest = HttpStatus.BAD_REQUEST
+        val errorDetails = ErrorDetails(
+            badRequest.value(),
+            e.message ?: e.localizedMessage,
+            LocalDateTime.now()
+        )
+
+        return ResponseEntity(errorDetails, badRequest)
+    }
+
+    @ExceptionHandler(UtilException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun csvUtilException(e: UtilException): ResponseEntity<ErrorDetails> {
         val badRequest = HttpStatus.BAD_REQUEST
         val errorDetails = ErrorDetails(
             badRequest.value(),

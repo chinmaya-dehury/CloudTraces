@@ -43,6 +43,10 @@ object CsvUtil {
     }
 
     private fun formatHeader(header: String): String {
+        if (isNumeric(header)) {
+            throw UtilException("File headers have one or more column names which are numeric string(s), header: $header")
+        }
+
         return header
             .lowercase()
             .replace("[^a-zA-Z0-9]".toRegex(), " ")
@@ -74,5 +78,9 @@ object CsvUtil {
     ): String {
         val delimiterSettings = getDelimiterSetting(delimiter!!)
         return list.joinToString(delimiterSettings.second)
+    }
+
+    private fun isNumeric(input: String): Boolean {
+        return input.matches("-?\\d+(\\.\\d+)?".toRegex())
     }
 }
