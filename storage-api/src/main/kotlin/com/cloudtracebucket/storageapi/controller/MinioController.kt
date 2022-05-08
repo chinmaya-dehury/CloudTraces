@@ -11,6 +11,9 @@ import com.cloudtracebucket.storageapi.utils.CsvUtil.getCsvHeaders
 import com.cloudtracebucket.storageapi.validator.FileValidator
 import com.jlefebure.spring.boot.minio.MinioException
 import com.jlefebure.spring.boot.minio.MinioService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Path
@@ -42,6 +45,13 @@ class MinioController @Autowired constructor(
 
     @GetMapping
     @Throws(MinioException::class)
+    @Operation(summary = "Returns a list of files available for downloading from file storage", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Successful Operation"),
+            ApiResponse(responseCode = "400", description = "Bad request"),
+        ]
+    )
     fun getListOfFiles(): ResponseEntity<List<FileInfoResponse>> {
         val files = fileMetaRepository.findAllFiles() ?: listOf()
         val response = fileFactory.createFileListResponse(files)
@@ -51,6 +61,13 @@ class MinioController @Autowired constructor(
 
     @GetMapping("/{fileName}")
     @Throws(MinioException::class, IOException::class)
+    @Operation(summary = "Download a file by its filename from file storage", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Successful Operation"),
+            ApiResponse(responseCode = "404", description = "Not found"),
+        ]
+    )
     fun getFile(
         @PathVariable("fileName") fileName: String,
         response: HttpServletResponse
@@ -66,6 +83,13 @@ class MinioController @Autowired constructor(
 
     @PostMapping
     @Throws(IllegalStateException::class)
+    @Operation(summary = "Uploads a cloud trace data file to file storage and processes the file", description = "Returns 200 if successful")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Successful Operation"),
+            ApiResponse(responseCode = "400", description = "Bad request"),
+        ]
+    )
     fun uploadFile(
         @RequestPart("file") file: MultipartFile,
         fileDetails: FileUploadRequest
@@ -91,9 +115,15 @@ class MinioController @Autowired constructor(
 
             val collectedData = restService.postTriggerDataCollector(dataCollectorRequest)
             val dataCollected = collectedData?.insertedRows!! > 0
-            val response = fileFactory.createFileUploadResponse(file, dataCollected, collectedData.errors)
 
-            return ResponseEntity(response, HttpStatus.OK)
+            val responseStatus = if (collectedData.errors.isNotEmpty()) {
+                HttpStatus.BAD_REQUEST
+            } else {
+                HttpStatus.OK
+            }
+
+            val response = fileFactory.createFileUploadResponse(file, dataCollected, collectedData.errors)
+            return ResponseEntity(response, responseStatus)
         } catch (e: MinioException) {
             throw IllegalStateException("The file cannot be upload on the internal storage. Please retry later", e)
         } catch (e: IOException) {

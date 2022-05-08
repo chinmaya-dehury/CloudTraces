@@ -12,7 +12,7 @@ Latest Docker
 
 Straight hands
 
-## Required ENV variables (will be updated):
+## Required ENV variables:
 
 `POSTGRES_DB=`
 
@@ -75,3 +75,6 @@ After building and before running the project run DB migrations:
 ## 4. And then...
 Run the project:
 * `./gradlew bootRun`
+
+## API docs
+* for Storage API docs go to `http://localhost:6001/swagger-ui/index.html#/`
