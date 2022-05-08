@@ -1,0 +1,93 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Bucket API",
+    "description": "Bucket API is a RESTful service, dedicated to getting the cloud trace data from generalized tables based on user-defined filters"
+  },
+  "host": "localhost:6003",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": ["Status"],
+        "summary": "Health check of data collector",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/okResponse"
+            }
+          }
+        }
+      }
+    },
+    "/trace-data": {
+      "post": {
+        "tags": ["Trace data"],
+        "summary": "Get cloud trace data from generalized tables",
+        "parameters": [
+          {
+            "name": "traceType",
+            "in": "query",
+            "type": "string",
+            "description": "Specifies what generalized table based on trace type to get data from",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/traceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/errorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "okResponse": {
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "traceDataResponse": {
+      "properties": {
+        "rows": {
+          "type": "array"
+        }
+      }
+    },
+    "errorResponse": {
+      "properties": {
+        "errors": {
+          "type": "array",
+          "example": ["No records have been inserted lately"],
+          "description": "An array that includes errors raised while data was being collected"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oneOf": {
+      "type": "basic",
+      "description": "Bucket API uses basic auth for authorization"
+    }
+  }
+}

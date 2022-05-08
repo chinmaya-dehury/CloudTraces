@@ -27,7 +27,7 @@ require('dotenv').config();
 const swaggerDocument = require('../swagger.json');
 
 app.use(
-    "/api-docs",
+    '/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument, { explorer: true })
 );
@@ -47,5 +47,5 @@ app.listen(port, () => {
 });
 
 function getUnauthorizedResponse(req) {
-    return JSON.stringify(req.auth ? `Credentials ${req.auth.user}:${req.auth.password} rejected` : 'Unauthorized');
+    return JSON.stringify(req.auth ? `Credentials for ${req.auth.user} rejected` : 'Unauthorized');
 }

@@ -1,4 +1,5 @@
 const express = require('express');
+const swaggerUi = require("swagger-ui-express");
 const basicAuth = require('express-basic-auth');
 const api = require('./api/controllers');
 const morgan = require('morgan');
@@ -22,6 +23,13 @@ const errorHandler = fn => (req, res, next) => {
 
 require('dotenv').config();
 
+const swaggerDocument = require('../swagger.json');
+
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, { explorer: true })
+);
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(basicAuth({
@@ -39,5 +47,5 @@ app.listen(port, () => {
 });
 
 function getUnauthorizedResponse(req) {
-    return JSON.stringify(req.auth ? `Credentials ${req.auth.user}:${req.auth.password} rejected` : 'Unauthorized');
+    return JSON.stringify(req.auth ? `Credentials for ${req.auth.user} rejected` : 'Unauthorized');
 }

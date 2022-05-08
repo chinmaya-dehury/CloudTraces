@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Data collector API",
-    "description": "Data Collector is a RESTful service, responsible for collecting cloud trace data from dynamically created tables by Storage API and inserting the data into generalized tables."
+    "description": "Data Collector is a RESTful service, responsible for collecting cloud trace data from dynamically created tables by Storage API and inserting the data into generalized tables"
   },
   "host": "localhost:6002",
   "basePath": "/",
