@@ -8,10 +8,10 @@ The aim of this project is to provide a single point access to metadata of diffe
 This is a collaborative work and we encourage others to contribute to this repo. We are preparing this repo by collecting publicly available resources.
 
 ## Screenshots 
-![Home](doc/img/screeshot-home.png)
-![Upload](doc/img/screeshot2-upload.png)
-![Download](doc/img/screeshot3-download.png)
-![About](doc/img/screeshot4-about.png)
+![Home](doc/img/screeshot-home.PNG)
+![Upload](doc/img/screeshot2-upload.PNG)
+![Download](doc/img/screeshot3-download.PNG)
+![About](doc/img/screeshot4-about.PNG)
 
 ---  
 # References
